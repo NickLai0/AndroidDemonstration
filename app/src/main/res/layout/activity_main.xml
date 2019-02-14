@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.test.activity.MainActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/am_tv_to_test_alloc_memory_activity"
+                style="@style/LongOrangeTVStyle"
+                android:text="测试内存分配" />
+
+            <TextView
+                android:id="@+id/am_tv_to_test_temperature_sensor_activity"
+                style="@style/LongOrangeTVStyle"
+                android:text="测试温度监控" />
+
+            <TextView
+                android:id="@+id/am_tv_to_test_reentrant_lock"
+                style="@style/LongOrangeTVStyle"
+                android:text="测试ReentrantLock(互斥锁)" />
+
+
+            <TextView
+                android:id="@+id/am_tv_to_test_synchronized_keyword"
+                style="@style/LongOrangeTVStyle"
+                android:text="测试synchronized关键字" />
+
+            <TextView
+                android:id="@+id/am_tv_to_test_volatile_keyword"
+                style="@style/LongOrangeTVStyle"
+                android:text="测试java volatile关键字" />
+
+            <TextView
+                android:id="@+id/am_tv_to_test_custom_array_list"
+                style="@style/LongOrangeTVStyle"
+                android:text="测试自定义ArrayList" />
+
+            <TextView
+                android:id="@+id/am_tv_to_test_collapsing_toolbar_layout"
+                style="@style/LongOrangeTVStyle"
+                android:text="CollapsingToolbarLayout Using test" />
+
+            <TextView
+                android:id="@+id/am_tv_to_test_collapsing_toolbar_layout_two"
+                style="@style/LongOrangeTVStyle"
+                android:text="CollapsingToolbarLayout Using Two" />
+
+            <TextView
+                android:id="@+id/am_tv_to_record_video"
+                style="@style/LongOrangeTVStyle"
+                android:text="record video test" />
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.constraint.ConstraintLayout>
