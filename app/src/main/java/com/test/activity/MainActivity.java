@@ -1,6 +1,5 @@
 package com.test.activity;
 
-import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.widget.TextView;
 
