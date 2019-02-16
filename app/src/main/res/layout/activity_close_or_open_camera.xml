@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/acooc_fl_root_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/acooc_tv_open_or_close_camera"
+        style="@style/LongOrangeTVStyle"
+        android:layout_gravity="bottom"
+        android:text="打开摄像头" />
+
+</FrameLayout>

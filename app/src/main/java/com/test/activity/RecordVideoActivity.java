@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.test.R;
+import com.test.util.CameraUtils;
 import com.test.view.CameraPreview;
 
 import java.io.File;
@@ -66,18 +67,6 @@ public class RecordVideoActivity extends BaseActivity {
     protected void initListener() {
         mTvRecord.setOnClickListener(this);
     }
-
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance() {
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        } catch (Exception e) {
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
-    }
-
 
     private void releaseMediaRecorder() {
         if (mMediaRecorder != null) {
@@ -213,7 +202,7 @@ public class RecordVideoActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         // Create an instance of Camera
-        mCamera = getCameraInstance();
+        mCamera = CameraUtils.getBackCameraInstance();
         // Create our Preview view and set it as the content of our activity.
         mCameraPreview = new CameraPreview(this, mCamera);
         mFlPreview.addView(mCameraPreview, 0);

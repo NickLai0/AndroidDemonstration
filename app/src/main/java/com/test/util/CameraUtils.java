@@ -1,5 +1,7 @@
 package com.test.util;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 
 import java.util.List;
@@ -45,5 +47,49 @@ public class CameraUtils {
             }
         }
         return optimalSize;
+    }
+
+
+
+
+    /** Check if this device has a camera */
+    private boolean checkCameraHardware(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            // this device has a camera
+            return true;
+        } else {
+            // no camera on this device
+            return false;
+        }
+    }
+
+    /** A safe way to get an instance of the Camera object. */
+    public static Camera getBackCameraInstance() {
+        Camera c = null;
+        try {
+            c = Camera.open(); // attempt to get a Camera instance
+        } catch (Exception e) {
+            // Camera is not available (in use or does not exist)
+        }
+        return c; // returns null if camera is unavailable
+    }
+
+    public static Camera getFrontCameraInstance() {
+        int numberOfCameras = Camera.getNumberOfCameras();
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        for (int i = 0; i < numberOfCameras; i++) {
+            try {
+                Camera.getCameraInfo(i, cameraInfo);
+            } catch (Exception e) {
+                continue;
+            }
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                try {
+                    return Camera.open(i); // attempt to get a Camera instance
+                } catch (Exception e) {
+                }
+            }
+        }
+        return null;
     }
 }

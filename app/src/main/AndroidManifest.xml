@@ -22,6 +22,7 @@
         <activity android:name=".activity.TestSynchronizedKeywordActivity"></activity>
         <activity android:name=".activity.TestVolatileKeywordActivity"></activity>
         <activity android:name=".activity.TestCustomArrayListActivity"></activity>
+        <activity android:name=".activity.CameraOpenOrCloseActivity"></activity>
         <activity
             android:name=".activity.RecordVideoActivity"
             android:screenOrientation="portrait"></activity>

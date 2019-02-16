@@ -29,6 +29,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
     private Camera.Size mOptimalSize;
+    private boolean mIsRecording = true;
+    private int mOrientation = 90;
 
     public CameraPreview(Context context, Camera camera) {
         super(context);
@@ -40,7 +42,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mHolder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mHolder.setFixedSize(0,0);
+        mHolder.setFixedSize(0, 0);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -64,8 +66,16 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    public void setIsRecordingPreview(boolean isRecording) {
+        mIsRecording = isRecording;
+    }
+
     public Camera.Size getOptimalSize() {
         return mOptimalSize;
+    }
+
+    public void setOrientation(int orientation) {
+        mOrientation = orientation;
     }
 
     private void preview() throws IOException {
@@ -83,26 +93,26 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         } catch (Exception e) {
             // ignore: tried to stop a non-existent preview
         }
-        mOptimalSize = CameraUtils.getOptimalSize(mCamera, getWidth(), getHeight());
-        Camera.Parameters parameters = mCamera.getParameters();
-        parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
-        mCamera.setParameters(parameters);
+        if (mIsRecording) {
+            mOptimalSize = CameraUtils.getOptimalSize(mCamera, getWidth(), getHeight());
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPreviewSize(mOptimalSize.width, mOptimalSize.height);
+            mCamera.setParameters(parameters);
 
-        // set preview size and make any resize, rotate or
-        // reformatting changes here
-        mCamera.setDisplayOrientation(90);
-        mCamera.setPreviewDisplay(mHolder);
-
-        List<String> focusModes = parameters.getSupportedFocusModes();
-        if (focusModes != null) {
-            for (String mode : focusModes) {
-                if (mode.contains("continuous-video")) {
-                    parameters.setFocusMode("continuous-video");
-                    break;
+            List<String> focusModes = parameters.getSupportedFocusModes();
+            if (focusModes != null) {
+                for (String mode : focusModes) {
+                    if (mode.contains("continuous-video")) {
+                        parameters.setFocusMode("continuous-video");
+                        break;
+                    }
                 }
             }
         }
-
+        // set preview size and make any resize, rotate or
+        // reformatting changes here
+        mCamera.setDisplayOrientation(mOrientation);
+        mCamera.setPreviewDisplay(mHolder);
         // start preview with new settings
         mCamera.startPreview();
     }
