@@ -17,6 +17,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvToTestCollapsingToolbarLayoutTwo;
     private TextView mTvToRecordVideo;
     private TextView mTvToCameraOpenOrClose;
+    private TextView mTvPringDoubleDataType;
 
     @Override
     protected int provideLayoutId() {
@@ -35,6 +36,7 @@ public class MainActivity extends BaseActivity {
         mTvToTestCollapsingToolbarLayoutTwo = (TextView) findViewById(R.id.am_tv_to_test_collapsing_toolbar_layout_two);
         mTvToRecordVideo = (TextView) findViewById(R.id.am_tv_to_record_video);
         mTvToCameraOpenOrClose = (TextView) findViewById(R.id.am_tv_to_camera_open_or_close);
+        mTvPringDoubleDataType = (TextView) findViewById(R.id.am_tv_print_double_data_type);
     }
 
     @Override
@@ -54,11 +56,16 @@ public class MainActivity extends BaseActivity {
         mTvToTestCollapsingToolbarLayoutTwo.setOnClickListener(this);
         mTvToRecordVideo.setOnClickListener(this);
         mTvToCameraOpenOrClose.setOnClickListener(this);
+        mTvPringDoubleDataType.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.am_tv_print_double_data_type:
+                PrintDoubleDataTypeActivity.start(this);
+                break;
+
             case R.id.am_tv_to_camera_open_or_close:
                 CameraOpenOrCloseActivity.start(this);
                 break;

@@ -64,6 +64,11 @@
                 android:id="@+id/am_tv_to_camera_open_or_close"
                 style="@style/LongOrangeTVStyle"
                 android:text="camera open or close" />
+
+            <TextView
+                android:id="@+id/am_tv_print_double_data_type"
+                style="@style/LongOrangeTVStyle"
+                android:text="print double data type test" />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
