@@ -69,6 +69,11 @@
                 android:id="@+id/am_tv_print_double_data_type"
                 style="@style/LongOrangeTVStyle"
                 android:text="print double data type test" />
+
+            <TextView
+                android:id="@+id/am_tv_quick_sort_algorithm"
+                style="@style/LongOrangeTVStyle"
+                android:text="quick sort algorithm" />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

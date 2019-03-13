@@ -2,9 +2,11 @@ package com.test.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.test.R;
+import com.test.util.AppUtils;
 
 /**
  * ******************(^_^)***********************<br>
@@ -100,5 +102,11 @@ public class PrintDoubleDataTypeActivity extends BaseActivity {
     @Override
     protected void initListener() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "is on top : " + AppUtils.isOnTop(this, getClass().getName()));
     }
 }

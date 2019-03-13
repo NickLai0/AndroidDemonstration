@@ -18,6 +18,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvToRecordVideo;
     private TextView mTvToCameraOpenOrClose;
     private TextView mTvPringDoubleDataType;
+    private TextView mTvQuickSortAlgorithm;
 
     @Override
     protected int provideLayoutId() {
@@ -37,6 +38,7 @@ public class MainActivity extends BaseActivity {
         mTvToRecordVideo = (TextView) findViewById(R.id.am_tv_to_record_video);
         mTvToCameraOpenOrClose = (TextView) findViewById(R.id.am_tv_to_camera_open_or_close);
         mTvPringDoubleDataType = (TextView) findViewById(R.id.am_tv_print_double_data_type);
+        mTvQuickSortAlgorithm = (TextView) findViewById(R.id.am_tv_quick_sort_algorithm);
     }
 
     @Override
@@ -57,6 +59,7 @@ public class MainActivity extends BaseActivity {
         mTvToRecordVideo.setOnClickListener(this);
         mTvToCameraOpenOrClose.setOnClickListener(this);
         mTvPringDoubleDataType.setOnClickListener(this);
+        mTvQuickSortAlgorithm.setOnClickListener(this);
     }
 
     @Override
@@ -104,6 +107,10 @@ public class MainActivity extends BaseActivity {
 
             case R.id.am_tv_to_test_collapsing_toolbar_layout_two:
                 TestCollapsingToolbarLayoutActivityTwo.start(this);
+                break;
+
+            case R.id.am_tv_quick_sort_algorithm:
+                QuickSortAlgorithmActivity.start(this);
                 break;
         }
     }
