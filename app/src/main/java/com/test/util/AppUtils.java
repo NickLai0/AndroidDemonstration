@@ -1,8 +1,9 @@
 package com.test.util;
 
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
+
+import java.util.List;
 
 /**
  * ******************(^_^)***********************<br>
@@ -15,10 +16,21 @@ import android.content.Context;
  */
 public class AppUtils {
 
-    public static boolean isOnTop(Context c, String activityClassName) {
+    public static boolean isActivityOnTop(Context c, String activityClassName) {
         ActivityManager am = (ActivityManager) c.getSystemService(Context.ACTIVITY_SERVICE);
-        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-        return cn.getClassName().equals(activityClassName);
+        List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
+        boolean isOnTop = false;
+        if (runningTasks != null && runningTasks.size() > 0) {
+            ActivityManager.RunningTaskInfo runningTaskInfo = runningTasks.get(0);
+            if (runningTaskInfo == null) {
+//                LogUploadManager.getInstance().logE(AppUtil.class.getSimpleName(), "isActivityOnTop -> the first element of runningTasks is null.runningTasks : " + runningTasks);
+            } else {
+                isOnTop = runningTaskInfo.topActivity.getClassName().equals(activityClassName);
+            }
+        } else {
+//            LogUploadManager.getInstance().logE(AppUtil.class.getSimpleName(), "isActivityOnTop -> the runningTasks is " + runningTasks + ", so do nothing.");
+        }
+        return isOnTop;
     }
 
 }

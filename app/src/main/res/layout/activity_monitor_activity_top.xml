@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/amat_tv_start_monitor"
+        style="@style/LongOrangeTVStyle"
+        android:text="start top activity monitor" />
+
+    <TextView
+        android:id="@+id/amat_tv_stop_monitor"
+        style="@style/LongOrangeTVStyle"
+        android:text="stop top activity monitor" />
+
+</LinearLayout>

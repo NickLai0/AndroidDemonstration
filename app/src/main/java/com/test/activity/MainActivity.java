@@ -19,6 +19,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvToCameraOpenOrClose;
     private TextView mTvPringDoubleDataType;
     private TextView mTvQuickSortAlgorithm;
+    private TextView mTvTopActivityMonitor;
 
     @Override
     protected int provideLayoutId() {
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity {
         mTvToCameraOpenOrClose = (TextView) findViewById(R.id.am_tv_to_camera_open_or_close);
         mTvPringDoubleDataType = (TextView) findViewById(R.id.am_tv_print_double_data_type);
         mTvQuickSortAlgorithm = (TextView) findViewById(R.id.am_tv_quick_sort_algorithm);
+        mTvTopActivityMonitor = (TextView) findViewById(R.id.am_tv_top_activity_monitor);
     }
 
     @Override
@@ -60,11 +62,16 @@ public class MainActivity extends BaseActivity {
         mTvToCameraOpenOrClose.setOnClickListener(this);
         mTvPringDoubleDataType.setOnClickListener(this);
         mTvQuickSortAlgorithm.setOnClickListener(this);
+        mTvTopActivityMonitor.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.am_tv_top_activity_monitor:
+                TopActivityMonitorActivity.start(this);
+                break;
+
             case R.id.am_tv_print_double_data_type:
                 PrintDoubleDataTypeActivity.start(this);
                 break;

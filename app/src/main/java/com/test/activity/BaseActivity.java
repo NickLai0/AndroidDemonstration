@@ -21,7 +21,7 @@ import com.test.util.L;
  */
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
-    protected boolean mLifecycleLog = BuildConfig.DEBUG;
+    protected boolean mLifecycleLogging = BuildConfig.DEBUG;
 
     protected final String TAG = getClass().getSimpleName();
 
@@ -116,7 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
 
     public void lifeCycleLog(String msg) {
-        if(mLifecycleLog) {
+        if(mLifecycleLogging) {
             L.i(TAG + hashCode(), msg);
         }
     }

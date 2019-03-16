@@ -107,6 +107,8 @@ public class PrintDoubleDataTypeActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "is on top : " + AppUtils.isOnTop(this, getClass().getName()));
     }
+
+
+
 }

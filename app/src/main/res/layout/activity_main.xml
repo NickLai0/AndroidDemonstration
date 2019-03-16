@@ -74,6 +74,11 @@
                 android:id="@+id/am_tv_quick_sort_algorithm"
                 style="@style/LongOrangeTVStyle"
                 android:text="quick sort algorithm" />
+
+            <TextView
+                android:id="@+id/am_tv_top_activity_monitor"
+                style="@style/LongOrangeTVStyle"
+                android:text="Top activity monitor." />
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
