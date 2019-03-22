@@ -20,6 +20,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvPringDoubleDataType;
     private TextView mTvQuickSortAlgorithm;
     private TextView mTvTopActivityMonitor;
+    private TextView mTvShowLongLargeImage;
 
     @Override
     protected int provideLayoutId() {
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
         mTvPringDoubleDataType = (TextView) findViewById(R.id.am_tv_print_double_data_type);
         mTvQuickSortAlgorithm = (TextView) findViewById(R.id.am_tv_quick_sort_algorithm);
         mTvTopActivityMonitor = (TextView) findViewById(R.id.am_tv_top_activity_monitor);
+        mTvShowLongLargeImage = (TextView) findViewById(R.id.am_tv_show_long_large_image);
     }
 
     @Override
@@ -63,11 +65,16 @@ public class MainActivity extends BaseActivity {
         mTvPringDoubleDataType.setOnClickListener(this);
         mTvQuickSortAlgorithm.setOnClickListener(this);
         mTvTopActivityMonitor.setOnClickListener(this);
+        mTvShowLongLargeImage.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.am_tv_show_long_large_image:
+                ShowLongLargeImageActivity.start(this);
+                break;
+
             case R.id.am_tv_top_activity_monitor:
                 TopActivityMonitorActivity.start(this);
                 break;

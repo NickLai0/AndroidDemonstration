@@ -22,13 +22,13 @@ public class AppUtils {
         boolean isOnTop = false;
         if (runningTasks != null && runningTasks.size() > 0) {
             ActivityManager.RunningTaskInfo runningTaskInfo = runningTasks.get(0);
-            if (runningTaskInfo == null) {
-//                LogUploadManager.getInstance().logE(AppUtil.class.getSimpleName(), "isActivityOnTop -> the first element of runningTasks is null.runningTasks : " + runningTasks);
+            if (runningTaskInfo == null || runningTaskInfo.topActivity == null) {
+                //to logging in file.
             } else {
                 isOnTop = runningTaskInfo.topActivity.getClassName().equals(activityClassName);
             }
         } else {
-//            LogUploadManager.getInstance().logE(AppUtil.class.getSimpleName(), "isActivityOnTop -> the runningTasks is " + runningTasks + ", so do nothing.");
+            //to logging in file.
         }
         return isOnTop;
     }

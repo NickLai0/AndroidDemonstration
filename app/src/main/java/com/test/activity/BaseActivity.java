@@ -120,4 +120,5 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             L.i(TAG + hashCode(), msg);
         }
     }
+
 }

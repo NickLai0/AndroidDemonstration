@@ -79,6 +79,12 @@
                 android:id="@+id/am_tv_top_activity_monitor"
                 style="@style/LongOrangeTVStyle"
                 android:text="Top activity monitor." />
+
+            <TextView
+                android:id="@+id/am_tv_show_long_large_image"
+                style="@style/LongOrangeTVStyle"
+                android:text="show long large image" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
