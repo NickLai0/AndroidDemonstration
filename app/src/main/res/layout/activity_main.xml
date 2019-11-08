@@ -85,8 +85,17 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="show long large image" />
 
+            <TextView
+                android:id="@+id/am_tv_coordinate_layout_demo"
+                style="@style/LongOrangeTVStyle"
+                android:text="CoordinateLayout analyze." />
+
+            <TextView
+                android:id="@+id/am_tv_tab_layout_demo"
+                style="@style/LongOrangeTVStyle"
+                android:text="TabLayout demo." />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
 </android.support.constraint.ConstraintLayout>

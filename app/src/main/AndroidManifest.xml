@@ -27,6 +27,8 @@
         <activity android:name=".activity.QuickSortAlgorithmActivity"></activity>
         <activity android:name=".activity.TopActivityMonitorActivity"></activity>
         <activity android:name=".activity.ShowLongLargeImageActivity"></activity>
+        <activity android:name=".activity.CoordinateLayoutDemoActivity"></activity>
+        <activity android:name=".activity.TabLayoutDemoActivity"></activity>
         <activity
             android:name=".activity.RecordVideoActivity"
             android:screenOrientation="portrait"></activity>

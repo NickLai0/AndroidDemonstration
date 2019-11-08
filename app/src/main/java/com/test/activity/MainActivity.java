@@ -21,6 +21,8 @@ public class MainActivity extends BaseActivity {
     private TextView mTvQuickSortAlgorithm;
     private TextView mTvTopActivityMonitor;
     private TextView mTvShowLongLargeImage;
+    private TextView mTvCoordinateLayoutDemo;
+    private TextView mTvTabLayoutDemo;
 
     @Override
     protected int provideLayoutId() {
@@ -43,6 +45,8 @@ public class MainActivity extends BaseActivity {
         mTvQuickSortAlgorithm = (TextView) findViewById(R.id.am_tv_quick_sort_algorithm);
         mTvTopActivityMonitor = (TextView) findViewById(R.id.am_tv_top_activity_monitor);
         mTvShowLongLargeImage = (TextView) findViewById(R.id.am_tv_show_long_large_image);
+        mTvCoordinateLayoutDemo = (TextView) findViewById(R.id.am_tv_coordinate_layout_demo);
+        mTvTabLayoutDemo = (TextView) findViewById(R.id.am_tv_tab_layout_demo);
     }
 
     @Override
@@ -66,6 +70,8 @@ public class MainActivity extends BaseActivity {
         mTvQuickSortAlgorithm.setOnClickListener(this);
         mTvTopActivityMonitor.setOnClickListener(this);
         mTvShowLongLargeImage.setOnClickListener(this);
+        mTvCoordinateLayoutDemo.setOnClickListener(this);
+        mTvTabLayoutDemo.setOnClickListener(this);
     }
 
     @Override
@@ -125,6 +131,14 @@ public class MainActivity extends BaseActivity {
 
             case R.id.am_tv_quick_sort_algorithm:
                 QuickSortAlgorithmActivity.start(this);
+                break;
+
+            case R.id.am_tv_coordinate_layout_demo:
+                CoordinateLayoutDemoActivity.start(this);
+                break;
+
+                case R.id.am_tv_tab_layout_demo:
+                TabLayoutDemoActivity.start(this);
                 break;
         }
     }
