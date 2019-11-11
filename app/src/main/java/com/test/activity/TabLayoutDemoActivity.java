@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 
 import com.test.R;
-import com.test.app.LogManager;
+import com.test.app.LogMgr;
 import com.test.util.TabLayoutUtils;
 
 /**
@@ -60,17 +60,17 @@ public class TabLayoutDemoActivity extends BaseActivity implements TabLayout.OnT
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        LogManager.i().logT(TAG, "onTabSelected -> text : " + tab.getText());
+        LogMgr.i().logT(TAG, "onTabSelected -> text : " + tab.getText());
     }
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        LogManager.i().logT(TAG, "onTabUnselected -> text : " + tab.getText());
+        LogMgr.i().logT(TAG, "onTabUnselected -> text : " + tab.getText());
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        LogManager.i().logT(TAG, "onTabReselected -> text : " + tab.getText());
+        LogMgr.i().logT(TAG, "onTabReselected -> text : " + tab.getText());
     }
 
 }

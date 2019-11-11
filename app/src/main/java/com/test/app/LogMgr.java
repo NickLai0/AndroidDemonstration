@@ -20,17 +20,17 @@ import java.io.File;
  * </p >
  * ******************(^_^)***********************
  */
-public class LogManager {
+public class LogMgr {
 
-    private static final String TAG = LogManager.class.getSimpleName();
+    private static final String TAG = LogMgr.class.getSimpleName();
     private Context mContext;
 
-    public static LogManager i() {
+    public static LogMgr i() {
         return SingletonHolder.sfLogUploadManager;
     }
 
     private static final class SingletonHolder {
-        private static final LogManager sfLogUploadManager = new LogManager();
+        private static final LogMgr sfLogUploadManager = new LogMgr();
     }
 
     private HandlerThread mHandlerThread;

@@ -6,7 +6,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.test.app.LogManager;
+import com.test.app.LogMgr;
 
 import java.lang.reflect.Field;
 
@@ -30,14 +30,14 @@ public class TabLayoutUtils {
             tabStrip = tabLayout.getDeclaredField("mTabStrip");
             tabStrip.setAccessible(true);
         } catch (Exception e) {
-            LogManager.i().logE(TAG, "setIndicator -> " + ExceptionUtil.getStackTrace(e));
+            LogMgr.i().logE(TAG, "setIndicator -> " + ExceptionUtil.getStackTrace(e));
             return;
         }
         LinearLayout llTab = null;
         try {
             llTab = (LinearLayout) tabStrip.get(tabs);
         } catch (Exception e) {
-            LogManager.i().logE(TAG, "setIndicator -> " + ExceptionUtil.getStackTrace(e));
+            LogMgr.i().logE(TAG, "setIndicator -> " + ExceptionUtil.getStackTrace(e));
             return;
         }
 

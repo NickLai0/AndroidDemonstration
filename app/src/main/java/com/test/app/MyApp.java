@@ -19,7 +19,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         //init log manager.
-        LogManager.i().init(this);
-        LogManager.i().start();
+        LogMgr.i().init(this);
+        LogMgr.i().start();
     }
 }
