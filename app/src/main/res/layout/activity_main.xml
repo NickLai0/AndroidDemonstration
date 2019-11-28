@@ -95,6 +95,16 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="TabLayout demo." />
 
+            <TextView
+                android:id="@+id/am_tv_test_custom_image_view"
+                style="@style/LongOrangeTVStyle"
+                android:text="Test CustomImageView." />
+
+            <TextView
+                android:id="@+id/am_tv_test_self_adaption_frame_layout"
+                style="@style/LongOrangeTVStyle"
+                android:text="Test SelfAdaptionFrameLayout." />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

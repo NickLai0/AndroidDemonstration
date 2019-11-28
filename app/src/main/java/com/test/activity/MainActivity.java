@@ -23,6 +23,8 @@ public class MainActivity extends BaseActivity {
     private TextView mTvShowLongLargeImage;
     private TextView mTvCoordinateLayoutDemo;
     private TextView mTvTabLayoutDemo;
+    private TextView mTvTestCustomImageView;
+    private TextView mTvTestSelfAdaptionFrameLayout;
 
     @Override
     protected int provideLayoutId() {
@@ -47,6 +49,8 @@ public class MainActivity extends BaseActivity {
         mTvShowLongLargeImage = (TextView) findViewById(R.id.am_tv_show_long_large_image);
         mTvCoordinateLayoutDemo = (TextView) findViewById(R.id.am_tv_coordinate_layout_demo);
         mTvTabLayoutDemo = (TextView) findViewById(R.id.am_tv_tab_layout_demo);
+        mTvTestCustomImageView = (TextView) findViewById(R.id.am_tv_test_custom_image_view);
+        mTvTestSelfAdaptionFrameLayout = (TextView) findViewById(R.id.am_tv_test_self_adaption_frame_layout);
     }
 
     @Override
@@ -72,6 +76,8 @@ public class MainActivity extends BaseActivity {
         mTvShowLongLargeImage.setOnClickListener(this);
         mTvCoordinateLayoutDemo.setOnClickListener(this);
         mTvTabLayoutDemo.setOnClickListener(this);
+        mTvTestCustomImageView.setOnClickListener(this);
+        mTvTestSelfAdaptionFrameLayout.setOnClickListener(this);
     }
 
     @Override
@@ -137,8 +143,16 @@ public class MainActivity extends BaseActivity {
                 CoordinateLayoutDemoActivity.start(this);
                 break;
 
-                case R.id.am_tv_tab_layout_demo:
+            case R.id.am_tv_tab_layout_demo:
                 TabLayoutDemoActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_custom_image_view:
+                TestCustomImageViewActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_self_adaption_frame_layout:
+                TestSelfAdaptionFrameViewActivity.start(this);
                 break;
         }
     }

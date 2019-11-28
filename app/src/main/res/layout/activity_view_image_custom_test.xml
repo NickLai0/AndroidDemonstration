@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.constraint.Placeholder
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+
+        <com.test.view.CustomImageView
+            android:id="@+id/avict_civ"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/red"
+            android:padding="5dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/photo" />
+
+        <android.support.constraint.Placeholder
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+
+        <Button
+            android:id="@+id/avict_btn_just_set_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="just set background" />
+
+        <Button
+            android:id="@+id/avict_btn_just_set_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="just set photo" />
+
+        <Button
+            android:id="@+id/avict_btn_set_background_and_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="set background and photo together" />
+
+        <Button
+            android:id="@+id/avict_btn_set_corner_radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="set corner radius" />
+
+        <Button
+            android:id="@+id/avict_btn_clear_corner_radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="clear corner radius" />
+
+        <android.support.constraint.Placeholder
+            android:layout_width="wrap_content"
+            android:layout_height="600dp" />
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

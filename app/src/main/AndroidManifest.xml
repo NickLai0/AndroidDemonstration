@@ -29,6 +29,8 @@
         <activity android:name=".activity.ShowLongLargeImageActivity"></activity>
         <activity android:name=".activity.CoordinateLayoutDemoActivity"></activity>
         <activity android:name=".activity.TabLayoutDemoActivity"></activity>
+        <activity android:name=".activity.TestCustomImageViewActivity"></activity>
+        <activity android:name=".activity.TestSelfAdaptionFrameViewActivity"></activity>
         <activity
             android:name=".activity.RecordVideoActivity"
             android:screenOrientation="portrait"></activity>

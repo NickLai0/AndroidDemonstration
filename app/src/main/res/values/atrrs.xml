@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="cornerRadius" format="dimension" />
+
+    <declare-styleable name="CustomImageView">
+        <attr name="cornerRadius" />
+    </declare-styleable>
+
+    <declare-styleable name="SelfAdaptionFrameLayout">
+        <attr name="cornerRadius" />
+        <attr name="heightSelfAdaptionBasedOnWidth" format="float" />
+        <attr name="widthSelfAdaptionBasedOnHeight" format="float" />
+    </declare-styleable>
+
+</resources>
