@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--
+    Conditions of marquee function in layout file.
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:focusable="true"
+        android:marqueeRepeatLimit="marquee_forever"
+
+    And in the code must to invoke
+    TextView#setSelected(boolean) method
+    and the boolean parameter has to be true.
+    -->
+
+    <TextView
+        android:id="@+id/amvt_tv_marquee"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="13dp"
+        android:background="#fdf1d9"
+        android:drawableStart="@drawable/ic_speaker"
+        android:drawableEnd="@drawable/ic_room_assistant_close"
+        android:drawablePadding="3dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingStart="13dp"
+        android:paddingRight="13dp"
+        android:singleLine="true"
+        android:text="自然拼读速成班火热报名中，立即去了解课程详情吧 自然拼读速成班火热报名中，立即去了解课程详情吧"
+        android:textSize="11sp"  />
+
+</FrameLayout>

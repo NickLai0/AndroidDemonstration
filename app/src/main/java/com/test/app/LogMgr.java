@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.log.BuildConfig;
 import com.log.LoggerImpl;
 import com.log.interfaces.Logger;
+import com.log.interfaces.Uploader;
 import com.test.util.ExceptionUtil;
 
 import java.io.File;
@@ -23,31 +24,26 @@ import java.io.File;
 public class LogMgr {
 
     private static final String TAG = LogMgr.class.getSimpleName();
-    private Context mContext;
-
-    public static LogMgr i() {
-        return SingletonHolder.sfLogUploadManager;
-    }
-
-    private static final class SingletonHolder {
-        private static final LogMgr sfLogUploadManager = new LogMgr();
-    }
 
     private HandlerThread mHandlerThread;
 
     private Logger mLogger;
 
+    private Uploader mUploader;
+
+    private Context mContext;
+
     private Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;
 
-    void start() {
-        mLogger.start();
-        logI(TAG, "start -> Logs must logging after this method be called");
+    public static LogMgr i() {
+        return SingletonHolder.sfLogMgr;
     }
 
-    void stop() {
-        logI(TAG, "stop -> this should never be called.");
-        mLogger.stop();
-        mHandlerThread.quit();
+    private static final class SingletonHolder {
+        private static final LogMgr sfLogMgr = new LogMgr();
+    }
+
+    private LogMgr() {
     }
 
     void init(Context c) {
@@ -102,6 +98,17 @@ public class LogMgr {
 
     }
 
+    void start() {
+        mLogger.start();
+        logI(TAG, "start -> Logs must logging after this method be called");
+    }
+
+    void stop() {
+        logI(TAG, "stop -> this should never be called.");
+        mLogger.stop();
+        mHandlerThread.quit();
+    }
+
     private long logStartMillis;
 
     public void logStart() {
@@ -111,9 +118,11 @@ public class LogMgr {
     public void logEnd(String tag, String msg) {
         logI(tag, "spent time : " + (System.currentTimeMillis() - logStartMillis) + " ; " + msg);
     }
+
     public void logT(String tag, String msg) {
         mLogger.logT(tag, msg);
     }
+
     public void logI(String tag, String msg) {
         mLogger.logI(tag, msg);
     }

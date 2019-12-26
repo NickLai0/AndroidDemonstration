@@ -105,6 +105,21 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="Test SelfAdaptionFrameLayout." />
 
+            <TextView
+                android:id="@+id/am_tv_test_progress_bar"
+                style="@style/LongOrangeTVStyle"
+                android:text="Test ProgressBar." />
+
+            <TextView
+                android:id="@+id/am_tv_test_text_view_marquee"
+                style="@style/LongOrangeTVStyle"
+                android:text="Test TextView Marquee function." />
+
+            <TextView
+                android:id="@+id/am_tv_test_coordinate_animation_helper"
+                style="@style/LongOrangeTVStyle"
+                android:text="test coordinate animation helper" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

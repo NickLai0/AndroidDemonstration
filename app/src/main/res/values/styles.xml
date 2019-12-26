@@ -49,4 +49,9 @@
 
     </style>
 
+    <style name="Custom.ProgressBar.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_custom</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_custom</item>
+    </style>
+
 </resources>

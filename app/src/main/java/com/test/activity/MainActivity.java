@@ -25,6 +25,9 @@ public class MainActivity extends BaseActivity {
     private TextView mTvTabLayoutDemo;
     private TextView mTvTestCustomImageView;
     private TextView mTvTestSelfAdaptionFrameLayout;
+    private TextView mTvTestProgressBar;
+    private TextView mTvTestTextViewMarquee;
+    private TextView mTvTestCoordinateAnimationHelper;
 
     @Override
     protected int provideLayoutId() {
@@ -51,6 +54,9 @@ public class MainActivity extends BaseActivity {
         mTvTabLayoutDemo = (TextView) findViewById(R.id.am_tv_tab_layout_demo);
         mTvTestCustomImageView = (TextView) findViewById(R.id.am_tv_test_custom_image_view);
         mTvTestSelfAdaptionFrameLayout = (TextView) findViewById(R.id.am_tv_test_self_adaption_frame_layout);
+        mTvTestProgressBar = (TextView) findViewById(R.id.am_tv_test_progress_bar);
+        mTvTestTextViewMarquee = (TextView) findViewById(R.id.am_tv_test_text_view_marquee);
+        mTvTestCoordinateAnimationHelper = (TextView) findViewById(R.id.am_tv_test_coordinate_animation_helper);
     }
 
     @Override
@@ -78,6 +84,9 @@ public class MainActivity extends BaseActivity {
         mTvTabLayoutDemo.setOnClickListener(this);
         mTvTestCustomImageView.setOnClickListener(this);
         mTvTestSelfAdaptionFrameLayout.setOnClickListener(this);
+        mTvTestProgressBar.setOnClickListener(this);
+        mTvTestTextViewMarquee.setOnClickListener(this);
+        mTvTestCoordinateAnimationHelper.setOnClickListener(this);
     }
 
     @Override
@@ -153,6 +162,18 @@ public class MainActivity extends BaseActivity {
 
             case R.id.am_tv_test_self_adaption_frame_layout:
                 TestSelfAdaptionFrameViewActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_progress_bar:
+                TestProgressBarActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_text_view_marquee:
+                TextViewMarqueeActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_coordinate_animation_helper:
+                TestCoordinateAnimationHelperActivity.start(this);
                 break;
         }
     }
