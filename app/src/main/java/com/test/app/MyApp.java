@@ -1,6 +1,9 @@
 package com.test.app;
 
 import android.app.Application;
+import android.os.HandlerThread;
+
+import com.test.thread.ThreadMgr;
 
 /**
  * ******************(^_^)***********************<br>
@@ -18,8 +21,10 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //init log manager.
-        LogMgr.i().init(this);
+        HandlerThread handlerThread = ThreadMgr.i().getUnquitableHandlerThread();
+        LogMgr.i().init(this, handlerThread.getLooper());
         LogMgr.i().start();
+        CountdownManager.i().init(handlerThread.getLooper());
     }
+
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/abt_fl_root_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/abt_btn_show_or_hide_the_test_view"
+        style="@style/WrapContent"
+        android:text="show or hide the test view." />
+
+    <ImageView
+        android:id="@+id/abt_iv_smile_heart_gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_smile_heart_gray" />
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/abt_iv_normal_heart_red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_normal_heart_red" />
+
+    <com.bezier.view.BezierCurveView
+        android:id="@+id/abt_bcv"
+        style="@style/MatchParent" />
+
+    <LinearLayout
+        android:id="@+id/abt_ll_test_view"
+        style="@style/MatchParent"
+        android:layout_marginTop="50dp"
+        android:background="#80000000"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/abt_btn_test_bezier_algorithm"
+            style="@style/WrapContent"
+            android:text="test bezier algorithm." />
+
+        <Button
+            android:id="@+id/abt_btn_test_bezier_algorithm_b3"
+            style="@style/WrapContent"
+            android:text="test b3(t) algorithm." />
+
+        <Button
+            android:id="@+id/abt_btn_draw_bezier"
+            style="@style/WrapContent"
+            android:text="draw bezier" />
+
+        <Button
+            android:id="@+id/abt_btn_show_or_hide_the_curve_view"
+            style="@style/WrapContent"
+            android:text="show or hide the curve view" />
+
+        <Button
+            android:id="@+id/abt_btn_send_a_heart"
+            style="@style/WrapContent"
+            android:text="send a heart" />
+
+    </LinearLayout>
+</FrameLayout>

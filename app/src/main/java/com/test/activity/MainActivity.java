@@ -28,6 +28,9 @@ public class MainActivity extends BaseActivity {
     private TextView mTvTestProgressBar;
     private TextView mTvTestTextViewMarquee;
     private TextView mTvTestCoordinateAnimationHelper;
+    private TextView mTvTestBezier;
+    private TextView mTvTestGif;
+    private TextView mTvTestObjectAnimator;
 
     @Override
     protected int provideLayoutId() {
@@ -57,6 +60,9 @@ public class MainActivity extends BaseActivity {
         mTvTestProgressBar = (TextView) findViewById(R.id.am_tv_test_progress_bar);
         mTvTestTextViewMarquee = (TextView) findViewById(R.id.am_tv_test_text_view_marquee);
         mTvTestCoordinateAnimationHelper = (TextView) findViewById(R.id.am_tv_test_coordinate_animation_helper);
+        mTvTestBezier = (TextView) findViewById(R.id.am_tv_test_bezier);
+        mTvTestGif = (TextView) findViewById(R.id.am_tv_test_gif);
+        mTvTestObjectAnimator = (TextView) findViewById(R.id.am_tv_test_object_animator);
     }
 
     @Override
@@ -87,6 +93,9 @@ public class MainActivity extends BaseActivity {
         mTvTestProgressBar.setOnClickListener(this);
         mTvTestTextViewMarquee.setOnClickListener(this);
         mTvTestCoordinateAnimationHelper.setOnClickListener(this);
+        mTvTestBezier.setOnClickListener(this);
+        mTvTestGif.setOnClickListener(this);
+        mTvTestObjectAnimator.setOnClickListener(this);
     }
 
     @Override
@@ -175,6 +184,19 @@ public class MainActivity extends BaseActivity {
             case R.id.am_tv_test_coordinate_animation_helper:
                 TestCoordinateAnimationHelperActivity.start(this);
                 break;
+
+            case R.id.am_tv_test_bezier:
+                TestBezierActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_gif:
+                TestGifActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_object_animator:
+                TestObjectAnimatorActivity.start(this);
+                break;
+
         }
     }
 }

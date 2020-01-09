@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/aaot_btn_test_alpha_animation_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alpha animation start by ObjectAnimator" />
+
+    <Button
+        android:id="@+id/aaot_btn_test_alpha_animation_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alpha animation stop by ObjectAnimator" />
+
+    <TextView
+        android:id="@+id/aaot_tv_weak_net_tip"
+        style="@style/WrapContent"
+        android:layout_marginTop="10dp"
+        android:background="@color/red"
+        android:text="网络连接不流畅，请检查网络设置或重新连接网络"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/aaot_btn_test_shake_animation_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Shake(rotation) animation start by ObjectAnimator." />
+
+    <Button
+        android:id="@+id/aaot_btn_test_shake_animation_stop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shake(rotation) animation stop by ObjectAnimator" />
+
+    <TextView
+        style="@style/WrapContent"
+        android:id="@+id/aaot_tv_shake_animation"
+        android:layout_marginTop="10dp"
+        android:background="@color/red"
+        android:padding="5dp"
+        android:text="测试抖动动画"
+        android:textColor="@color/white" />
+
+</LinearLayout>

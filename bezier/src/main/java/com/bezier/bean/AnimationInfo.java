@@ -1,12 +1,12 @@
-package com.test.data;
+package com.bezier.bean;
 
 import android.view.View;
 
 /**
  * ******************(^_^)***********************<br>
  * User: Nick<br>
- * Date: 2019/12/25<br>
- * Time: 14:15<br>
+ * Date: 2020/1/2<br>
+ * Time: 11:47<br>
  * <P>DESC:
  * </p >
  * ******************(^_^)***********************

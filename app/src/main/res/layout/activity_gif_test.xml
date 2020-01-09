@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/agt_btn_show_or_hide_test_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show or hide test view." />
+
+    <LinearLayout
+        android:id="@+id/agt_ll_test_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:background="#80000000"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/agt_btn_gif_animation_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gif animation start for CustomGifView" />
+
+        <Button
+            android:id="@+id/agt_btn_gif_animation_start_by_glide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="gif animation start for ImageView" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/WrapContent"
+            android:text="The following view is CustomGifView.Playing GIF by custom view." />
+
+        <com.test.view.CustomGifView
+            android:id="@+id/agt_cgv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            style="@style/WrapContent"
+            android:layout_marginTop="10dp"
+            android:text="The following view is ImageView.Playing the local GIF by Glide framework." />
+
+        <ImageView
+            android:id="@+id/agt_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+        <TextView
+            style="@style/WrapContent"
+            android:layout_marginTop="10dp"
+            android:text="The following view is ImageView.Playing the online GIF by Glide framework." />
+
+        <ImageView
+            android:id="@+id/agt_iv_online_gif"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

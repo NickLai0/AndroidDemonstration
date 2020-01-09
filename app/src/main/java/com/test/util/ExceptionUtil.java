@@ -25,12 +25,7 @@ public class ExceptionUtil {
         }
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
-        try {
-            t.printStackTrace(pw);
-            return sw.toString();
-        } finally {
-            pw.close();
-        }
+        t.printStackTrace(pw);
+        return sw.toString();
     }
-
 }

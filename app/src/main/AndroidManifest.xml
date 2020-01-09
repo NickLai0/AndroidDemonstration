@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -34,6 +35,9 @@
         <activity android:name=".activity.TestProgressBarActivity"></activity>
         <activity android:name=".activity.TextViewMarqueeActivity"></activity>
         <activity android:name=".activity.TestCoordinateAnimationHelperActivity"></activity>
+        <activity android:name=".activity.TestBezierActivity"></activity>
+        <activity android:name=".activity.TestGifActivity"></activity>
+        <activity android:name=".activity.TestObjectAnimatorActivity"></activity>
         <activity
             android:name=".activity.RecordVideoActivity"
             android:screenOrientation="portrait"></activity>

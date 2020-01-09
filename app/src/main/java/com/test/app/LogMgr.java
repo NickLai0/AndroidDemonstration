@@ -46,15 +46,17 @@ public class LogMgr {
     private LogMgr() {
     }
 
-    void init(Context c) {
+    void init(Context c, Looper loggingLooper) {
         if (mContext != null) {
             //Has already initialized.
             return;
         }
         mContext = c.getApplicationContext();
-        mHandlerThread = new HandlerThread(TAG);
-        mHandlerThread.start();
-        Looper looper = mHandlerThread.getLooper();
+        if (loggingLooper == null) {
+            mHandlerThread = new HandlerThread(TAG);
+            mHandlerThread.start();
+            loggingLooper = mHandlerThread.getLooper();
+        }
         boolean isDebug = BuildConfig.DEBUG;
         String logDir = mContext.getFilesDir() + File.separator + "logRepo";
         String logZipDir = logDir + File.separator + "zip";
@@ -62,7 +64,7 @@ public class LogMgr {
 
         mLogger = new LoggerImpl.Builder()
                 .setContext(mContext)
-                .setLooper(looper)
+                .setLooper(loggingLooper)
                 .setLogDir(logDir)
                 .setLogFileName(logFileName)
                 .setZipLogDir(logZipDir)
@@ -106,7 +108,9 @@ public class LogMgr {
     void stop() {
         logI(TAG, "stop -> this should never be called.");
         mLogger.stop();
-        mHandlerThread.quit();
+        if (mHandlerThread != null) {
+            mHandlerThread.quit();
+        }
     }
 
     private long logStartMillis;

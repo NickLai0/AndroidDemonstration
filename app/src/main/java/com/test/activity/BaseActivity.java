@@ -116,8 +116,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
 
     public void lifeCycleLog(String msg) {
-        if(mLifecycleLogging) {
-            L.i(TAG + hashCode(), msg);
+        if (mLifecycleLogging) {
+            L.i(TAG, msg);
         }
     }
 

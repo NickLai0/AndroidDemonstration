@@ -120,6 +120,21 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="test coordinate animation helper" />
 
+            <TextView
+                android:id="@+id/am_tv_test_bezier"
+                style="@style/LongOrangeTVStyle"
+                android:text="test Bezier(贝塞尔曲线)" />
+
+            <TextView
+                android:id="@+id/am_tv_test_gif"
+                style="@style/LongOrangeTVStyle"
+                android:text="test custom git view" />
+
+            <TextView
+                android:id="@+id/am_tv_test_object_animator"
+                style="@style/LongOrangeTVStyle"
+                android:text="test ObjectAnimator" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
