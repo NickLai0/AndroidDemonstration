@@ -38,6 +38,7 @@
         <activity android:name=".activity.TestBezierActivity"></activity>
         <activity android:name=".activity.TestGifActivity"></activity>
         <activity android:name=".activity.TestObjectAnimatorActivity"></activity>
+        <activity android:name=".activity.TestWavFileFormatActivity"></activity>
         <activity
             android:name=".activity.RecordVideoActivity"
             android:screenOrientation="portrait"></activity>

@@ -135,6 +135,11 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="test ObjectAnimator" />
 
+            <TextView
+                android:id="@+id/am_tv_test_wav_file_format"
+                style="@style/LongOrangeTVStyle"
+                android:text="test .wav(PCM audio data) file format." />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

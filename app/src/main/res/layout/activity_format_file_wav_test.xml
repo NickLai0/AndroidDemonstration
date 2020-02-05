@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/affwt_btn_recording_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recording start" />
+
+    <Button
+        android:id="@+id/affwt_btn_recording_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="recording stop" />
+
+    <Button
+        android:id="@+id/affwt_btn_playing_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="playing start" />
+
+    <Button
+        android:id="@+id/affwt_btn_playing_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="playing stop" />
+
+    <ImageView
+        android:id="@+id/affwt_iv_volume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_volume_03"
+        android:visibility="gone" />
+
+</LinearLayout>

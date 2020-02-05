@@ -1,1 +1,1 @@
-include ':app', ':lib', ':lib2', ':logger', ':bezier', ':countdown'
+include ':app', ':lib', ':lib2', ':logger', ':bezier', ':countdown', ':wav'

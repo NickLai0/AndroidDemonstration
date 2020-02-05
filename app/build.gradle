@@ -39,6 +39,7 @@ dependencies {
     implementation project(':logger')
     implementation project(':bezier')
     implementation project(':countdown')
+    implementation project(':wav')
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }

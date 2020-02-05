@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvTestCoordinateAnimationHelper;
     private TextView mTvTestBezier;
     private TextView mTvTestGif;
-    private TextView mTvTestObjectAnimator;
+    private TextView mTvTestObjectAnimator, mTvTestWavFileFormat;
 
     @Override
     protected int provideLayoutId() {
@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity {
         mTvTestBezier = (TextView) findViewById(R.id.am_tv_test_bezier);
         mTvTestGif = (TextView) findViewById(R.id.am_tv_test_gif);
         mTvTestObjectAnimator = (TextView) findViewById(R.id.am_tv_test_object_animator);
+        mTvTestWavFileFormat = (TextView) findViewById(R.id.am_tv_test_wav_file_format);
     }
 
     @Override
@@ -96,6 +97,7 @@ public class MainActivity extends BaseActivity {
         mTvTestBezier.setOnClickListener(this);
         mTvTestGif.setOnClickListener(this);
         mTvTestObjectAnimator.setOnClickListener(this);
+        mTvTestWavFileFormat.setOnClickListener(this);
     }
 
     @Override
@@ -195,6 +197,10 @@ public class MainActivity extends BaseActivity {
 
             case R.id.am_tv_test_object_animator:
                 TestObjectAnimatorActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_wav_file_format:
+                TestWavFileFormatActivity.start(this);
                 break;
 
         }
