@@ -40,6 +40,7 @@ public class LoggerParameters extends BaseParameters {
     String mZipLogDir;
 
     int mLogRefreshBytes;
+    int mLogInQueueBytes;
     int mZipLogBytes;
     int mMaxZips;
 

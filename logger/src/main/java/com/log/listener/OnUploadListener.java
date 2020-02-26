@@ -13,27 +13,27 @@ public interface OnUploadListener {
 
     /**
      * Before the file upload event performed.
-     * This would be call back.
-     * Notice that this would called in
-     * the work thread.
+     * This would be called.
+     * Notice that this method would be called
+     * in the work thread.
      */
     void onBeforeFileUpload();
 
     /**
-     * Has no log file in the waiting
+     * there is no log file in the waiting
      * upload directory.
      */
     void onHasNoLogFile();
 
     /**
      * Every time the file uploaded success
-     * that this would be call back.
+     * that this method would be called.
      */
-    void onFileUploadSuccess(String dir, String fileName, int failedCount, int successCount, int total);
+    void onFileUploadSuccess(String urlSuffix, String dir, String fileName, int failedCount, int successCount, int total);
 
     /**
      * Every time the file uploaded failed
-     * that this would be call back.
+     * that this method would be called.
      */
     void onFileUploadFailed(String dir, String fileName, int failedCount, int successCount, int total);
 

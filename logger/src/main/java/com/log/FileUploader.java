@@ -155,11 +155,11 @@ public class FileUploader implements Uploader {
         }
     }
 
-    protected void publishOnLogFileUploadSuccess(String dir, String fileName, int failedCount, int successCount, int total) {
+    protected void publishOnLogFileUploadSuccess(String urlSuffix, String dir, String fileName, int failedCount, int successCount, int total) {
         for (int i = 0; i < mUP.mUploadListenerList.size(); i++) {
             OnUploadListener l = mUP.mUploadListenerList.get(i);
             if (l != null) {
-                l.onFileUploadSuccess(dir, fileName, failedCount, successCount, total);
+                l.onFileUploadSuccess(urlSuffix,dir, fileName, failedCount, successCount, total);
             }
         }
         if (mUP.mIsDeleteUploadedFile) {

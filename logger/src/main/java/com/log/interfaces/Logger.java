@@ -1,5 +1,7 @@
 package com.log.interfaces;
 
+import com.log.listener.OnLogRefreshListener;
+
 /**
  * ******************(^_^)***********************<br>
  * User: Nick<br>
@@ -29,14 +31,6 @@ public interface Logger extends StartStop {
      */
     void logE(String tag, String msg);
 
-    void logException(String tag, Exception exception);
-
-    void logMethodStackTrack(String tag, String msg);
-
-    void notifyRefreshLog();
-
-    void refreshLog();
-
-
+    void refreshLogRequest(OnLogRefreshListener l);
 
 }

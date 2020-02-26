@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.log.interfaces.Logger;
+import com.log.listener.OnLogRefreshListener;
 import com.log.util.ExceptionUtils;
 import com.log.util.FileUtils;
 import com.log.util.ZipUtils;
@@ -36,23 +37,27 @@ import java.util.TimeZone;
  */
 public class LoggerImpl implements Logger {
 
+    private static final String INFO_MARK_TEMP = "[temp]";
+    private static final String INFO_MARK_INFO = "[info]";
+    private static final String INFO_MARK_ERROR = "[error]";
+    private static final String INFO_MARK_EXCEPTION = "[exception]";
+
     protected final String TAG = getClass().getSimpleName();
 
-    private final int MSG_CHECK_LOG = 1;
-    private final int MSG_NOTIFY_REFRESH_LOG = 2;
+    private final int MSG_REFRESH_LOG_REQUEST = 2;
+    private final int MSG_LOG_ENQUEUE = 3;
 
     protected LoggerParameters mLP = new LoggerParameters();
 
     @Override
     public synchronized void start() {
-        logInside(TAG, "Start -> Invoke start method by outside.");
         if (mLP.mIsStarted) {
-            logInside(TAG, "Start -> Invoke start method by outside.But has already started.");
             return;
         }
         mLP.mIsStarted = true;
         if (mLP.mLooper != null) {
             mLP.mLogHandler = new LogHandler(mLP.mLooper);
+            logInside(TAG, "start -> Use the looper of outside.");
             return;
         }
         if (mLP.mLogHandlerThread == null) {
@@ -69,6 +74,7 @@ public class LoggerImpl implements Logger {
         }
     }
 
+
     private class LogHandler extends Handler {
 
         public LogHandler(Looper looper) {
@@ -78,12 +84,24 @@ public class LoggerImpl implements Logger {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case MSG_CHECK_LOG:
-                    checkLog();
+                case MSG_LOG_ENQUEUE:
+                    if (msg.obj instanceof String) {
+                        String formattedMsg = (String) msg.obj;
+                        mLP.mMsgQueue.addLast(formattedMsg);
+                        mLP.mLogInQueueBytes += formattedMsg.length();
+                    }
+                    boolean refreshLogImmediately = msg.arg1 != 0;
+                    if (refreshLogImmediately || mLP.mLogInQueueBytes >= mLP.mLogRefreshBytes) {
+                        //if (!mLP.mLogHandler.hasMessages(MSG_REFRESH_LOG_REQUEST)) {
+                        refreshLogRequest(null);
+                        //}
+                    }
                     break;
 
-                case MSG_NOTIFY_REFRESH_LOG:
-                    refreshLog();
+                case MSG_REFRESH_LOG_REQUEST:
+                    //msg.obj may be null.
+                    refreshLog((OnLogRefreshListener) msg.obj);
+                    mLP.mLogInQueueBytes = 0;
                     boolean isZipSuccessful = zipLog(true);
                     if (isZipSuccessful) {
                         deleteLogFileIfOutOfLimited();
@@ -95,10 +113,6 @@ public class LoggerImpl implements Logger {
     }
 
     protected boolean zipLog(boolean isCareLogSize) {
-//        if (mLP.mMaxZips < 1) {
-//            logInside(TAG, "zipLog -> Max zips smaller than 1");
-//            return;
-//        }
         boolean isLogZipSuccessful = false;
         boolean needZip = true;
         File logFile = getLogFile();
@@ -273,18 +287,14 @@ public class LoggerImpl implements Logger {
     @Override
     public synchronized void stop() {
         if (!mLP.mIsStarted) {
-            logInside(TAG, "stop -> Haven't started yet.Do nothing.");
             return;
         }
         mLP.mIsStarted = false;
-        logInside(TAG, "stop -> Invoke stop method by outside.");
         if (mLP.mLogHandler != null) {
-            logInside(TAG, "stop -> remove all of messages.");
             mLP.mLogHandler.removeCallbacksAndMessages(null);
             mLP.mLogHandler = null;
         }
         if (mLP.mLogHandlerThread != null) {
-            logInside(TAG, "stop -> quit handler thread.");
             mLP.mLogHandlerThread.quit();
             mLP.mLogHandlerThread = null;
         }
@@ -300,58 +310,28 @@ public class LoggerImpl implements Logger {
         return false;
     }
 
-    private void notifyCheckLog() {
-        if (mLP.mLogHandler == null) {
-            logInside(TAG, "checkLog -> checkLog method invoked but the log handler haven't initiated yet!");
-        } else {
-            if (!mLP.mLogHandler.hasMessages(MSG_CHECK_LOG)) {
-                mLP.mLogHandler.sendEmptyMessage(MSG_CHECK_LOG);
-            }
-        }
-    }
-
-    private void checkLog() {
-        int logSize = 0;
-        try {
-            synchronized (mLP.mMsgQueue) {
-                for (String msg : mLP.mMsgQueue) {
-                    logSize += msg == null ? 0 : msg.length();
-                }
-            }
-        } catch (Exception e) { //avoid ConcurrentModifyException.
-            logInside(TAG, ExceptionUtils.getStackTrace(e));
-        }
-        if (logSize >= mLP.mLogRefreshBytes) {
-            notifyRefreshLog();
-        }
-    }
-
-
     @Override
-    public void notifyRefreshLog() {
+    public void refreshLogRequest(OnLogRefreshListener l) {
         if (mLP.mLogHandler == null) {
             logInside(TAG, "notifyRefreshLog -> notifyRefreshLog method invoked but the log handler haven't initiated yet!");
         } else {
-            if (!mLP.mLogHandler.hasMessages(MSG_NOTIFY_REFRESH_LOG)) {
-                mLP.mLogHandler.sendEmptyMessage(MSG_NOTIFY_REFRESH_LOG);
-            }
+            Message.obtain(mLP.mLogHandler, MSG_REFRESH_LOG_REQUEST, l).sendToTarget();
         }
     }
 
-    @Override
-    public void refreshLog() {
-        File logFile = null;
-        synchronized (mLP.mMsgQueue) {
-            if (mLP.mMsgQueue.isEmpty()) {
-                //Ignore this event, because there is no any log.
-                return;
+    private void refreshLog(OnLogRefreshListener l) {
+        if (mLP.mMsgQueue.isEmpty()) {
+            //Ignore this event, because there is no any log.
+            if (l != null) {
+                l.onLogRefreshed();
             }
-            logFile = getLogFile();
-            if (!logFile.exists()) {
-                FileUtils.createNewFile(logFile);
-                if (!TextUtils.isEmpty(mLP.mHeaderInfo)) {
-                    mLP.mMsgQueue.addFirst(mLP.mHeaderInfo);
-                }
+            return;
+        }
+        File logFile = getLogFile();
+        if (!logFile.exists()) {
+            FileUtils.createNewFile(logFile);
+            if (!TextUtils.isEmpty(mLP.mHeaderInfo)) {
+                mLP.mMsgQueue.addFirst(mLP.mHeaderInfo);
             }
         }
         PrintWriter printWriter = null;
@@ -361,17 +341,19 @@ public class LoggerImpl implements Logger {
                 printWriter.println(mLP.mRefreshLogStartTag);
             }
             String log = null;
-            while ((log = msgDequeue()) != null) {
+            while ((log = mLP.mMsgQueue.pollFirst()) != null) {
                 printWriter.println(log);
             }
             if (mLP.mIsRecordRefreshLogEndTag) {
                 printWriter.println(mLP.mRefreshLogEndTag);
             }
-            printWriter.flush();
         } catch (Exception e) {
             logInside(TAG, ExceptionUtils.getStackTrace(e));
         } finally {
             FileUtils.close(printWriter);
+            if (l != null) {
+                l.onLogRefreshed();
+            }
         }
     }
 
@@ -409,67 +391,54 @@ public class LoggerImpl implements Logger {
     }
 
     protected void logInside(String tag, String msg) {
-        if (mLP.mIsOpenInsideLog) {
-            //Just let the message enqueue here.
-            msgEnqueue("[inside]", tag, msg);
-        }
-    }
-
-    @Override
-    public void logMethodStackTrack(String tag, String msg) {
-        logException(tag, new RuntimeException(msg));
-    }
-
-    @Override
-    public void logException(String tag, Exception exception) {
-        log("[exception]", tag, ExceptionUtils.getStackTrace(exception), true);
+        log("[inside]", tag, msg, false);
     }
 
     @Override
     public void logE(String tag, String msg) {
-        log("[error]", tag, msg, true);
+        log(INFO_MARK_ERROR, tag, msg, true);
     }
 
     @Override
     public void logT(String tag, String msg) {
         if (mLP.mIsDebug || isOpenLoggingForce()) {
-            log("[temp]", tag, msg, false);
+            log(INFO_MARK_TEMP, tag, msg, false);
         }
     }
 
     @Override
     public void logI(String tag, String msg) {
-        log("", tag, msg, false);
+        log(INFO_MARK_INFO, tag, msg, false);
     }
 
-    private void log(String infoMark, String tag, String msg, boolean notifyRefreshLogImmediately) {
-        if (mLP.mIsDebug || isOpenLoggingForce()) {
-            Log.i(tag, msg);
-        }
-        msgEnqueue(infoMark, tag, msg);
-        if (notifyRefreshLogImmediately) {
-            notifyRefreshLog();
-        } else {
-            notifyCheckLog();
-        }
-    }
-
-    private void msgEnqueue(String infoMark, String tag, String msg) {
+    private void log(String infoMark, String tag, String msg, boolean refreshLogImmediately) {
+        logcatLogging(infoMark, tag, msg);
         String date = mLP.mLogContentSimpleDateFormat.format(new Date());
-        String formattedMsg = null;
-        if (TextUtils.isEmpty(infoMark)) {
-            formattedMsg = String.format(Locale.getDefault(), "%s %s: %s", date, tag, msg);
-        } else {
-            formattedMsg = String.format(Locale.getDefault(), "%s %s %s: %s", date, infoMark, tag, msg);
-        }
-        synchronized (mLP.mMsgQueue) {
-            mLP.mMsgQueue.addLast(formattedMsg);
-        }
+        String formattedMsg = String.format(Locale.getDefault(), "%s %s %s: %s", date, infoMark, tag, msg);
+        Message.obtain(mLP.mLogHandler, MSG_LOG_ENQUEUE, refreshLogImmediately ? 1 : 0, 0, formattedMsg).sendToTarget();
     }
 
-    private String msgDequeue() {
-        synchronized (mLP.mMsgQueue) {
-            return mLP.mMsgQueue.pollFirst();
+    private void logcatLogging(String infoMark, String tag, String msg) {
+        if (TextUtils.isEmpty(infoMark) || TextUtils.isEmpty(tag) || TextUtils.isEmpty(msg)) {
+            return;
+        }
+        if (mLP.mIsDebug || isOpenLoggingForce()) {
+            switch (infoMark) {
+                case INFO_MARK_ERROR:
+                case INFO_MARK_EXCEPTION:
+                    Log.e(tag, msg);
+                    break;
+
+                case INFO_MARK_INFO:
+                    Log.i(tag, msg);
+                    break;
+
+                case INFO_MARK_TEMP:
+                default:
+                    Log.i(tag, msg);
+                    //Log.v(tag, msg);
+                    break;
+            }
         }
     }
 
@@ -546,7 +515,7 @@ public class LoggerImpl implements Logger {
 
             if (mLogContentSimpleDateFormat == null) {
                 SimpleDateFormat sdf = new SimpleDateFormat();
-                sdf.applyPattern("MM-dd HH:mm:ss.sss");
+                sdf.applyPattern("yyyy-MM-dd HH:mm:ss.sss");
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                 lp.mLogContentSimpleDateFormat = sdf;
             } else {

@@ -23,7 +23,7 @@ public class UploadAdapter implements OnUploadListener {
     }
 
     @Override
-    public void onFileUploadSuccess(String dir, String fileName, int failedCount, int successCount, int total) {
+    public void onFileUploadSuccess(String urlSuffix, String dir, String fileName, int failedCount, int successCount, int total) {
 
     }
 

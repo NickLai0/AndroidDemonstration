@@ -8,6 +8,7 @@ import com.log.BuildConfig;
 import com.log.LoggerImpl;
 import com.log.interfaces.Logger;
 import com.log.interfaces.Uploader;
+import com.log.listener.OnLogRefreshListener;
 import com.test.util.ExceptionUtil;
 
 import java.io.File;
@@ -91,10 +92,15 @@ public class LogMgr {
             public void uncaughtException(Thread t, Throwable e) {
                 logE(TAG, "uncaughtException -> thread name : " + t.getName() + ", thread id : " + t.getId() + ", Exception : " + ExceptionUtil.getStackTrace(e));
                 //Refresh all of logs.
-                mLogger.refreshLog();
-                if (mDefaultUncaughtExceptionHandler != null) {
-                    mDefaultUncaughtExceptionHandler.uncaughtException(t, e);
-                }
+                mLogger.refreshLogRequest(new OnLogRefreshListener() {
+                    @Override
+                    public void onLogRefreshed() {
+                        if (mDefaultUncaughtExceptionHandler != null) {
+                            mDefaultUncaughtExceptionHandler.uncaughtException(t, e);
+                        }
+                    }
+                });
+
             }
         });
 
@@ -120,7 +126,7 @@ public class LogMgr {
     }
 
     public void logEnd(String tag, String msg) {
-        logI(tag, "spent time : " + (System.currentTimeMillis() - logStartMillis) + " ; " + msg);
+        logI(TAG, "spent time : " + (System.currentTimeMillis() - logStartMillis) + " ; " + msg);
     }
 
     public void logT(String tag, String msg) {
@@ -131,15 +137,16 @@ public class LogMgr {
         mLogger.logI(tag, msg);
     }
 
-    public void logE(String tag, String s) {
-        mLogger.logE(tag, s);
+    public void logE(String tag, String msg) {
+        mLogger.logE(tag, msg);
     }
 
     public void flushAsync() {
-        mLogger.notifyRefreshLog();
-    }
-
-    public void flush() {
-        mLogger.refreshLog();
+        mLogger.refreshLogRequest(new OnLogRefreshListener() {
+            @Override
+            public void onLogRefreshed() {
+                LogMgr.i().logI(TAG, "flushAsync -> onLogRefreshed callback.");
+            }
+        });
     }
 }
