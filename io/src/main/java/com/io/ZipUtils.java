@@ -15,18 +15,41 @@ public class ZipUtils {
         zip(file.getParent(), file.getName(), new File(dest));
     }
 
-    public static void zip(String rootDir, String fileName, File dest) throws IOException {
+    public static void zip(String dir, String fileName, File dest) throws IOException {
         ZipOutputStream out = null;
         try {
             out = new ZipOutputStream(new FileOutputStream(dest));
-            zip(rootDir, fileName, out);
+            zip(dir, fileName, out);
         } finally {
             IOUtils.close(out);
         }
     }
 
-    public static void zip(String rootDir, String fileName, ZipOutputStream out) throws IOException {
-        File file = new File(rootDir, fileName);
+    public static void zipSources(String dest, String... sources) throws IOException {
+        zipSources(new File(dest), sources);
+    }
+
+    public static void zipSources(File dest, String... sources) throws IOException {
+        if (sources == null || sources.length == 0) {
+            return;
+        }
+        ZipOutputStream out = null;
+        try {
+            out = new ZipOutputStream(new FileOutputStream(dest));
+            for (String src : sources) {
+                if (src == null) {
+                    continue;
+                }
+                File file = new File(src);
+                zip(file.getParent(), file.getName(), out);
+            }
+        } finally {
+            IOUtils.close(out);
+        }
+    }
+
+    public static void zip(String dir, String fileName, ZipOutputStream out) throws IOException {
+        File file = new File(dir, fileName);
         if (file.isFile()) {
             FileInputStream in = new FileInputStream(file);
             byte[] buf = new byte[8 * 1024];
@@ -44,11 +67,12 @@ public class ZipUtils {
                 out.closeEntry();
             } else {
                 for (int i = 0; i < fileNameArr.length; i++) {
-                    zip(rootDir, fileName + File.separator + fileNameArr[i], out);
+                    zip(dir, fileName + File.separator + fileNameArr[i], out);
                 }
             }
         }
     }
+
 
     private static void unzip(String zipPath, String destDir) throws IOException {
         ZipInputStream in = new ZipInputStream(new FileInputStream(zipPath));
