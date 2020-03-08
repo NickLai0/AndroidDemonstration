@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/avr_fl_root_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/avr_ll_root_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/avr_fl_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/avr_tv_record"
+        android:id="@+id/avr_tv_start_or_stop"
         style="@style/LongOrangeTVStyle"
-        android:layout_gravity="bottom" />
+        android:text="start recording video" />
 
-</FrameLayout>
+</LinearLayout>

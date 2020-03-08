@@ -33,8 +33,8 @@ public class CameraUtils {
         if (videoSizes != null && previewSizes != null) {
             //the pixels of view
             int area = viewW * viewH;
-            int minDifference = Integer.MAX_VALUE;
             int tempArea = 0;
+            int minDifference = Integer.MAX_VALUE;
             for (Camera.Size s : videoSizes) {
                 if (
                         (tempArea = s.width * s.height) >= area
@@ -50,9 +50,9 @@ public class CameraUtils {
     }
 
 
-
-
-    /** Check if this device has a camera */
+    /**
+     * Check if this device has a camera
+     */
     private boolean checkCameraHardware(Context context) {
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             // this device has a camera
@@ -63,7 +63,9 @@ public class CameraUtils {
         }
     }
 
-    /** A safe way to get an instance of the Camera object. */
+    /**
+     * A safe way to get an instance of the Camera object.
+     */
     public static Camera getBackCameraInstance() {
         Camera c = null;
         try {
@@ -92,4 +94,5 @@ public class CameraUtils {
         }
         return null;
     }
+
 }

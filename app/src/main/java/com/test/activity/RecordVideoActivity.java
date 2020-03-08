@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.test.R;
@@ -38,9 +39,15 @@ public class RecordVideoActivity extends BaseActivity {
 
 
     private Camera mCamera;
+
     private MediaRecorder mMediaRecorder;
+
     private CameraPreview mCameraPreview;
-    private FrameLayout mFlPreview;
+
+    private LinearLayout mFlPreview;
+
+    private FrameLayout mFlPreviewContainer;
+
     private TextView mTvRecord;
 
     public static void start(Activity a) {
@@ -54,13 +61,20 @@ public class RecordVideoActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        mFlPreview = (FrameLayout) findViewById(R.id.avr_fl_root_container);
-        mTvRecord = (TextView) findViewById(R.id.avr_tv_record);
+        mFlPreview = findViewById(R.id.avr_ll_root_container);
+        mFlPreviewContainer = findViewById(R.id.avr_fl_preview_container);
+        mTvRecord = findViewById(R.id.avr_tv_start_or_stop);
     }
 
     @Override
     protected void initData() {
         mTvRecord.setText(RECORDING_WORDING_START);
+        mCamera = getCamera();
+        mFlPreviewContainer.addView(mCameraPreview = new CameraPreview(this, ));
+    }
+
+    private Camera getCamera() {
+      return  CameraUtils.getFrontCameraInstance();
     }
 
     @Override
@@ -126,12 +140,16 @@ public class RecordVideoActivity extends BaseActivity {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
-    /** Create a file Uri for saving an image or video */
+    /**
+     * Create a file Uri for saving an image or video
+     */
     private Uri getOutputMediaFileUri(Context c, int type) {
         return Uri.fromFile(getOutputMediaFile(c, type));
     }
 
-    /** Create a File for saving an image or video */
+    /**
+     * Create a File for saving an image or video
+     */
     private File getOutputMediaFile(Context c, int type) {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
@@ -168,7 +186,7 @@ public class RecordVideoActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.avr_tv_record:
+            case R.id.avr_tv_start_or_stop:
                 if (RECORDING_WORDING_START.equals(mTvRecord.getText())) {
                     if (!prepareVideoRecorder(mCamera, mCameraPreview.getHolder().getSurface(), mCameraPreview.getOptimalSize())) {
                         Log.e(TAG, "onClick -> click record button, but prepare video failed.");

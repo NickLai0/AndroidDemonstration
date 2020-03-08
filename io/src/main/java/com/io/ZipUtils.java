@@ -103,5 +103,12 @@ public class ZipUtils {
             IOUtils.close(in);
         }
     }
-
+    public static void main(String[] args) {
+        String[] strArr = new String[]{"log1", "log2", "log123", "loga", "loga1", "log1a", "log1a.txt"};
+        for (String str : strArr) {
+            if (str.matches("log" + "\\d+")) {
+                System.out.println(str);
+            }
+        }
+    }
 }
