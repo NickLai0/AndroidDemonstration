@@ -70,11 +70,14 @@ public class RecordVideoActivity extends BaseActivity {
     protected void initData() {
         mTvRecord.setText(RECORDING_WORDING_START);
         mCamera = getCamera();
-        mFlPreviewContainer.addView(mCameraPreview = new CameraPreview(this, ));
+        mFlPreviewContainer.addView(mCameraPreview = new CameraPreview(this, mCamera));
     }
 
     private Camera getCamera() {
-      return  CameraUtils.getFrontCameraInstance();
+        if (mCamera == null) {
+            mCamera = CameraUtils.getFrontCameraInstance();
+        }
+        return mCamera;
     }
 
     @Override
@@ -98,10 +101,7 @@ public class RecordVideoActivity extends BaseActivity {
     }
 
     private boolean prepareVideoRecorder(Camera c, Surface surface, Camera.Size optimalSize) {
-
-        if (mMediaRecorder != null) {
-            mMediaRecorder.release();
-        }
+        releaseMediaRecorder();
 
 //        mCamera = getCameraInstance();
         mMediaRecorder = new MediaRecorder();
@@ -125,7 +125,7 @@ public class RecordVideoActivity extends BaseActivity {
         mMediaRecorder.setOutputFile(getOutputMediaFile(this, MEDIA_TYPE_VIDEO).toString());
 
         // Step 5: Set the preview output
-        mMediaRecorder.setPreviewDisplay(surface);
+        //mMediaRecorder.setPreviewDisplay(surface);
 
         // Step 6: Prepare configured MediaRecorder
         try {
@@ -200,30 +200,6 @@ public class RecordVideoActivity extends BaseActivity {
                 }
                 break;
         }
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        releaseMediaRecorder();
-        // take camera access back from MediaRecorder
-        mCamera.lock();
-        releaseCamera();
-        if (mCameraPreview != null) {
-            mFlPreview.removeView(mCameraPreview);
-        }
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Create an instance of Camera
-        mCamera = CameraUtils.getBackCameraInstance();
-        // Create our Preview view and set it as the content of our activity.
-        mCameraPreview = new CameraPreview(this, mCamera);
-        mFlPreview.addView(mCameraPreview, 0);
     }
 
     @Override

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 
+import com.test.app.LogMgr;
+
 import java.util.List;
 
 /**
@@ -83,12 +85,14 @@ public class CameraUtils {
             try {
                 Camera.getCameraInfo(i, cameraInfo);
             } catch (Exception e) {
+                LogMgr.i().logE("CameraUtils", "getFrontCameraInstance -> " + ExceptionUtil.getStackTrace(e));
                 continue;
             }
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 try {
                     return Camera.open(i); // attempt to get a Camera instance
                 } catch (Exception e) {
+                    LogMgr.i().logE("CameraUtils", "getFrontCameraInstance -> " + ExceptionUtil.getStackTrace(e));
                 }
             }
         }
