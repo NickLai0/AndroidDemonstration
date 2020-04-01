@@ -25,8 +25,19 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected final String TAG = getClass().getSimpleName();
 
+    private static boolean isTest = true;
+    private static int testCount = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        if (isTest) {
+//            if (testCount % 2 == 0) {
+//                ActivityUtils.fullScreen(this);
+//            } else {
+//                ActivityUtils.immersiveNavigation(this);
+//            }
+//            testCount++;
+//        }
         super.onCreate(savedInstanceState);
         setContentView(provideLayoutId());
         lifeCycleLog("onCreate");
@@ -73,8 +84,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         lifeCycleLog("onBackPressed");
+        finish();
     }
 
     @Override
@@ -97,8 +108,15 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void finish() {
-        super.finish();
         lifeCycleLog("finish");
+        if (!isFinishing()) {
+            onFinish();
+            super.finish();
+        }
+    }
+
+    protected  void onFinish() {
+        lifeCycleLog("onFinish");
     }
 
     protected abstract int provideLayoutId();

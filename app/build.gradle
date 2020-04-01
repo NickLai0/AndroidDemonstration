@@ -20,6 +20,14 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+
+    // Specifies one flavor dimension.
+    flavorDimensions "version"
+
+    productFlavors {
+        demo {}
+    }
+
 }
 
 repositories {

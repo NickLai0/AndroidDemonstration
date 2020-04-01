@@ -26,8 +26,6 @@ public class CountdownHelper {
 
     private HandlerThread mCountdownHandlerThread;
 
-    private Object mCountdownSync = new Object();
-
     private List<CountdownInfo> mCountdownInfoList = new ArrayList();
 
     private boolean mInitialized;
@@ -72,7 +70,7 @@ public class CountdownHelper {
     public void uninit() {
         if (mInitialized) {
             if (mCountdownHandlerThread != null) {
-                mCountdownHandlerThread.quitSafely();
+                mCountdownHandlerThread.quit();
                 mCountdownHandlerThread = null;
             }
             removeAll();
@@ -83,38 +81,36 @@ public class CountdownHelper {
     }
 
     private void handleCountdownMessage(Message msg) {
-        synchronized (mCountdownSync) {
-            for (int i = 0; i < mCountdownInfoList.size(); i++) {
-                CountdownInfo ci = mCountdownInfoList.get(i);
-                long currentMillis = System.currentTimeMillis();
-                int lastFrameCount = ci.frameCount;
-                if (currentMillis >= ci.endMillis) {
-                    ci.spentMillis = ci.duration;
-                    ci.spentMillisPercent = 1;
-                    ci.frameCount++;
-                } else {
-                    ci.spentMillis = currentMillis - ci.startMillis;
-                    ci.spentMillisPercent = ci.spentMillis * 1.0 / ci.duration;
-                    ci.frameCount = (int) (ci.spentMillis / ci.frameFrequency);
-                }
+        for (int i = 0; i < mCountdownInfoList.size(); i++) {
+            CountdownInfo ci = mCountdownInfoList.get(i);
+            long currentMillis = System.currentTimeMillis();
+            int lastFrameCount = ci.frameCount;
+            if (currentMillis >= ci.endMillis) {
+                ci.spentMillis = ci.duration;
+                ci.spentMillisPercent = 1;
+                ci.frameCount++;
+            } else {
+                ci.spentMillis = currentMillis - ci.startMillis;
+                ci.spentMillisPercent = ci.spentMillis * 1.0 / ci.duration;
+                ci.frameCount = (int) (ci.spentMillis / ci.frameFrequency);
+            }
 
-                if (lastFrameCount == ci.frameCount) {
-                    continue;
-                }
+            if (lastFrameCount == ci.frameCount) {
+                continue;
+            }
 
-                if (ci.subThreadListener != null) {
-                    ci.subThreadListener.onCountdownUpdate(ci);
-                }
+            if (ci.subThreadListener != null) {
+                ci.subThreadListener.onCountdownUpdate(ci);
+            }
 
-                if (ci.mainThreadListener != null) {
-                    Message.obtain(mMainThreadHandler, 0, ci).sendToTarget();
-                }
+            if (ci.mainThreadListener != null) {
+                Message.obtain(mMainThreadHandler, 0, ci).sendToTarget();
+            }
 
-                if (ci.spentMillisPercent == 1) {
-                    //The countdown ended.
-                    mCountdownInfoList.remove(ci);
-                    i--;
-                }
+            if (ci.spentMillisPercent == 1) {
+                //The countdown ended.
+                mCountdownInfoList.remove(ci);
+                i--;
             }
         }
         if (mCountdownInfoList.size() > 0) {
@@ -128,13 +124,14 @@ public class CountdownHelper {
             ci.mainThreadListener.onCountdownUpdate(ci);
         }
     }
+
     public CountdownInfo add(long startMillis, long endMillis, int frameFrequency, OnCountdownListener subThreadListener, OnCountdownListener mainThreadListener) {
         return add(startMillis, endMillis, frameFrequency, null, subThreadListener, mainThreadListener);
     }
 
     public CountdownInfo add(long startMillis, long endMillis, int frameFrequency, Object tag, OnCountdownListener subThreadListener, OnCountdownListener mainThreadListener) {
         check();
-        if (subThreadListener == null || mainThreadListener == null) {
+        if (subThreadListener == null && mainThreadListener == null) {
             throw new IllegalArgumentException("Either subThreadListener and mainThreadListener can not be null.");
         }
         CountdownInfo ci = new CountdownInfo();
@@ -145,24 +142,22 @@ public class CountdownHelper {
         ci.tag = tag;
         ci.subThreadListener = subThreadListener;
         ci.mainThreadListener = mainThreadListener;
-        synchronized (mCountdownSync) {
-            mCountdownInfoList.add(ci);
-        }
+
+        mCountdownInfoList.add(ci);
+
         mCountdownHandler.removeCallbacksAndMessages(null);
         mCountdownHandler.sendEmptyMessage(0);
         return ci;
     }
 
     public boolean remove(CountdownInfo ci) {
-        synchronized (mCountdownSync) {
-            return mCountdownInfoList.remove(ci);
-        }
+        check();
+        return mCountdownInfoList.remove(ci);
     }
 
     public void removeAll() {
-        synchronized (mCountdownSync) {
-            mCountdownInfoList.clear();
-        }
+        check();
+        mCountdownInfoList.clear();
     }
 
     private void check() {

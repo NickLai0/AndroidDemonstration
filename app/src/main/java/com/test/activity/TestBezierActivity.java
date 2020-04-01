@@ -22,7 +22,7 @@ import com.cd.OnCountdownListener;
 import com.test.R;
 import com.test.app.CountdownManager;
 import com.test.app.LogMgr;
-import com.test.util.ActivityUtil;
+import com.test.util.ActivityUtils;
 import com.test.util.ScreenUtils;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class TestBezierActivity extends BaseActivity implements CoordinateAnimat
 
     @Override
     protected int provideLayoutId() {
-        ActivityUtil.immersiveNavigation(this);
+        ActivityUtils.immersiveNavigation(this);
         return R.layout.activity_bezier_test;
     }
 

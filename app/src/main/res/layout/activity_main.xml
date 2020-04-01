@@ -140,6 +140,21 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="test .wav(PCM audio data) file format." />
 
+            <TextView
+                android:id="@+id/am_tv_test_modify_display_metrics"
+                style="@style/LongOrangeTVStyle"
+                android:text="test .wav(PCM audio data) file format." />
+
+            <TextView
+                android:id="@+id/am_tv_test_countdown_framework"
+                style="@style/LongOrangeTVStyle"
+                android:text="test countdown framework." />
+
+            <TextView
+                android:id="@+id/am_tv_test_html_compact"
+                style="@style/LongOrangeTVStyle"
+                android:text="test HTML compact" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

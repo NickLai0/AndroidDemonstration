@@ -8,7 +8,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 
 /**
@@ -21,7 +20,7 @@ import java.util.ArrayList;
  * 更新描述   ${TODO}
  */
 
-public class ActivityUtil {
+public class ActivityUtils {
 
 //    public static void fullScreenAndKeepScreenOn(Activity a) {
 //        Window window = a.getWindow();
@@ -36,25 +35,6 @@ public class ActivityUtil {
 ////        window.setAttributes(layoutParams);
 //        fullScreen(a);
 //    }
-
-    public static void fullScreen(Activity a) {
-        Window window = a.getWindow();
-        if (window == null) {
-            return;
-        }
-        //取消状态栏
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        //隐藏Navigation bar
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.systemUiVisibility = layoutParams.systemUiVisibility
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        ;
-//        layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
-        window.setAttributes(layoutParams);
-    }
 
     public static void hideNavigationBar(Window w) {
         int uiFlags =
@@ -124,12 +104,32 @@ public class ActivityUtil {
         return hasNotchInScreen;
     }
 
+    public static void fullScreen(Activity a) {
+        Window window = a.getWindow();
+        if (window == null) {
+            return;
+        }
+        //取消状态栏
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //隐藏Navigation bar
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        layoutParams.systemUiVisibility
+                |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        ;
+//        layoutParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+        window.setAttributes(layoutParams);
+    }
+
     public static void immersiveNavigation(Activity curActivity) {
         Window curWindow = curActivity.getWindow();
         if (curWindow != null) {
             //隐藏Navigation bar
             WindowManager.LayoutParams layoutParams = curWindow.getAttributes();
-            layoutParams.systemUiVisibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            layoutParams.systemUiVisibility
+                    |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_IMMERSIVE
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             ;

@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.test.R;
+import com.test.app.LogMgr;
 
 public class MainActivity extends BaseActivity {
 
@@ -30,6 +31,9 @@ public class MainActivity extends BaseActivity {
     private TextView mTvTestCoordinateAnimationHelper;
     private TextView mTvTestBezier;
     private TextView mTvTestGif;
+    private TextView mTvTestModifyDisplayMetrics;
+    private TextView mTvTestCountdownFramework;
+    private TextView mTvTestHtmlCompact;
     private TextView mTvTestObjectAnimator, mTvTestWavFileFormat;
 
     @Override
@@ -64,6 +68,9 @@ public class MainActivity extends BaseActivity {
         mTvTestGif = (TextView) findViewById(R.id.am_tv_test_gif);
         mTvTestObjectAnimator = (TextView) findViewById(R.id.am_tv_test_object_animator);
         mTvTestWavFileFormat = (TextView) findViewById(R.id.am_tv_test_wav_file_format);
+        mTvTestModifyDisplayMetrics = (TextView) findViewById(R.id.am_tv_test_modify_display_metrics);
+        mTvTestCountdownFramework = (TextView) findViewById(R.id.am_tv_test_countdown_framework);
+        mTvTestHtmlCompact = (TextView) findViewById(R.id.am_tv_test_html_compact);
     }
 
     @Override
@@ -98,6 +105,9 @@ public class MainActivity extends BaseActivity {
         mTvTestGif.setOnClickListener(this);
         mTvTestObjectAnimator.setOnClickListener(this);
         mTvTestWavFileFormat.setOnClickListener(this);
+        mTvTestModifyDisplayMetrics.setOnClickListener(this);
+        mTvTestCountdownFramework.setOnClickListener(this);
+        mTvTestHtmlCompact.setOnClickListener(this);
     }
 
     @Override
@@ -203,6 +213,24 @@ public class MainActivity extends BaseActivity {
                 TestWavFileFormatActivity.start(this);
                 break;
 
+            case R.id.am_tv_test_modify_display_metrics:
+                ModifyDisplayMetricsActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_countdown_framework:
+                TestCountdownFrameworkActivity.start(this);
+                break;
+
+            case R.id.am_tv_test_html_compact:
+                TestHtmlCompactActivity.start(this);
+                break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogMgr.i().logI(TAG, "onResume -> activity resource: " + getResources().getDisplayMetrics());
+        LogMgr.i().logI(TAG, "onResume -> application resource: " + getApplication().getResources().getDisplayMetrics());
     }
 }
