@@ -18,7 +18,6 @@ import com.log.interfaces.Logger;
 import com.log.interfaces.Uploader;
 import com.log.listener.OnUploadListener;
 import com.log.util.FileUtils;
-import com.log.util.MyArrayList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -306,14 +305,14 @@ public class FileUploader implements Uploader {
             if (mCheckIntervalMillis <= 0) {
                 throw new IllegalArgumentException("Expected > 0 check interval milliseconds.");
             }
-            if (TextUtils.isEmpty(mUploadDir) || !new File(mUploadDir).exists()) {
+            if (TextUtils.isEmpty(mUploadDir) || !FileUtils.checkDir(new File(mUploadDir))) {
                 throw new IllegalArgumentException("Expected exists log directory but the path is empty or the directory doesn't exist.");
             }
         }
 
         protected void apply(UploadParameters up) {
             up.mContext = mContext.getApplicationContext();
-            up.mUploadListenerList = new MyArrayList<>();
+            up.mUploadListenerList = new ArrayList<>();
             up.mLooper = mLooper;
             up.mLogger = mLogger;
             up.mIsDeleteUploadedFile = mIsDeleteUploadedFile;

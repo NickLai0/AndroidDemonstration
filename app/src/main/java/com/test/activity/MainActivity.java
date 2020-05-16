@@ -71,6 +71,10 @@ public class MainActivity extends BaseActivity {
         mTvTestModifyDisplayMetrics = (TextView) findViewById(R.id.am_tv_test_modify_display_metrics);
         mTvTestCountdownFramework = (TextView) findViewById(R.id.am_tv_test_countdown_framework);
         mTvTestHtmlCompact = (TextView) findViewById(R.id.am_tv_test_html_compact);
+        findViewById(R.id.am_tv_test_lottie_animation).setOnClickListener(this);
+        findViewById(R.id.am_test_generate_qr_code).setOnClickListener(this);
+        findViewById(R.id.am_test_drawable_center_text_view).setOnClickListener(this);
+        findViewById(R.id.am_mvp_demo).setOnClickListener(this);
     }
 
     @Override
@@ -224,7 +228,25 @@ public class MainActivity extends BaseActivity {
             case R.id.am_tv_test_html_compact:
                 TestHtmlCompactActivity.start(this);
                 break;
+
+            case R.id.am_tv_test_lottie_animation:
+                TestLottieActivity.start(this);
+                break;
+
+            case R.id.am_test_generate_qr_code:
+                TestGenerateQRCodeActivity.start(this);
+                break;
+            case R.id.am_test_drawable_center_text_view:
+                TestDrawableCenterTextViewActivity.start(this);
+                break;
+            case R.id.am_mvp_demo:
+                TestMvpActivity.start(this);
+                break;
         }
+    }
+
+    public void openActivityWithoutAnimation(View v) {
+        WithoutAnimationAActivity.start(this);
     }
 
     @Override
@@ -233,4 +255,5 @@ public class MainActivity extends BaseActivity {
         LogMgr.i().logI(TAG, "onResume -> activity resource: " + getResources().getDisplayMetrics());
         LogMgr.i().logI(TAG, "onResume -> application resource: " + getApplication().getResources().getDisplayMetrics());
     }
+
 }

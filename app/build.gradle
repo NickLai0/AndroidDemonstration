@@ -50,5 +50,9 @@ dependencies {
     implementation project(':wav')
     implementation project(':io')
     implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.airbnb.android:lottie:2.7.0'
+    implementation 'org.greenrobot:eventbus:3.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    //QR code library.
+    implementation 'com.google.zxing:core:3.3.0'
 }

@@ -155,6 +155,32 @@
                 style="@style/LongOrangeTVStyle"
                 android:text="test HTML compact" />
 
+            <TextView
+                android:id="@+id/am_tv_test_lottie_animation"
+                style="@style/LongOrangeTVStyle"
+                android:text="test lottie animation" />
+
+            <TextView
+                android:id="@+id/am_test_generate_qr_code"
+                style="@style/LongOrangeTVStyle"
+                android:text="test generate QR code" />
+
+            <TextView
+                android:id="@+id/am_test_drawable_center_text_view"
+                style="@style/LongOrangeTVStyle"
+                android:text="test drawable center text view" />
+
+            <TextView
+                android:id="@+id/am_mvp_demo"
+                style="@style/LongOrangeTVStyle"
+                android:text="mvp demo." />
+
+            <TextView
+                android:onClick="openActivityWithoutAnimation"
+                android:id="@+id/am_open_activity_without_animation"
+                style="@style/LongOrangeTVStyle"
+                android:text="open activity without animation" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

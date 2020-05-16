@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/amt_ed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:imeOptions="flagNoExtractUi"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="@id/amt_btn_send_message"
+        app:layout_constraintEnd_toStartOf="@id/amt_btn_send_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/amt_btn_send_message" />
+
+    <Button
+        android:id="@+id/amt_btn_send_message"
+        style="@style/WrapContent"
+        android:text="send"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

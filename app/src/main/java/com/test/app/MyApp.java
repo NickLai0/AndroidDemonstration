@@ -6,7 +6,6 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.test.thread.ThreadMgr;
-import com.wav.util.LogUtils;
 
 /**
  * ******************(^_^)***********************<br>
@@ -32,9 +31,9 @@ public class MyApp extends Application {
         super.onCreate();
         Log.i(TAG, "onCreate -> ");
         sInstance = this;
-        HandlerThread handlerThread = ThreadMgr.i().getUnquitableHandlerThread();
-        LogMgr.i().init(this, handlerThread.getLooper());
+        LogMgr.i().init(this);
         LogMgr.i().start();
+        HandlerThread handlerThread = ThreadMgr.i().getUnquitableHandlerThread();
         CountdownManager.i().init(handlerThread.getLooper());
     }
 

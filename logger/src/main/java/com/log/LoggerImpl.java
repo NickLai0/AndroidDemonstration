@@ -1,6 +1,5 @@
 package com.log;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -12,17 +11,14 @@ import com.log.interfaces.Logger;
 import com.log.listener.OnLogRefreshListener;
 import com.log.util.ExceptionUtils;
 import com.log.util.FileUtils;
-import com.log.util.ZipUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -37,17 +33,19 @@ import java.util.TimeZone;
  */
 public class LoggerImpl implements Logger {
 
+    protected final String TAG = getClass().getSimpleName();
+
     private static final String INFO_MARK_TEMP = "[temp]";
     private static final String INFO_MARK_INFO = "[info]";
     private static final String INFO_MARK_ERROR = "[error]";
-    private static final String INFO_MARK_EXCEPTION = "[exception]";
-
-    protected final String TAG = getClass().getSimpleName();
 
     private final int MSG_REFRESH_LOG_REQUEST = 2;
     private final int MSG_LOG_ENQUEUE = 3;
 
     protected LoggerParameters mLP = new LoggerParameters();
+
+    private LoggerImpl() {
+    }
 
     @Override
     public synchronized void start() {
@@ -88,10 +86,10 @@ public class LoggerImpl implements Logger {
                     if (msg.obj instanceof String) {
                         String formattedMsg = (String) msg.obj;
                         mLP.mMsgQueue.addLast(formattedMsg);
-                        mLP.mLogInQueueBytes += formattedMsg.length();
+                        mLP.mLogInQueueCurrentBytes += formattedMsg.length();
                     }
                     boolean refreshLogImmediately = msg.arg1 != 0;
-                    if (refreshLogImmediately || mLP.mLogInQueueBytes >= mLP.mLogRefreshBytes) {
+                    if (refreshLogImmediately || mLP.mLogInQueueCurrentBytes >= mLP.mLogInQueueBytesThreshold) {
                         //if (!mLP.mLogHandler.hasMessages(MSG_REFRESH_LOG_REQUEST)) {
                         refreshLogRequest(null);
                         //}
@@ -99,189 +97,12 @@ public class LoggerImpl implements Logger {
                     break;
 
                 case MSG_REFRESH_LOG_REQUEST:
-                    //msg.obj may be null.
+                    //msg.obj might be null.
                     refreshLog((OnLogRefreshListener) msg.obj);
-                    mLP.mLogInQueueBytes = 0;
-                    boolean isZipSuccessful = zipLog(true);
-                    if (isZipSuccessful) {
-                        deleteLogFileIfOutOfLimited();
-                        deleteOldestZipIfOutOfLimited();
-                    }
+                    mLP.mLogInQueueCurrentBytes = 0;
                     break;
             }
         }
-    }
-
-    protected boolean zipLog(boolean isCareLogSize) {
-        boolean isLogZipSuccessful = false;
-        boolean needZip = true;
-        File logFile = getLogFile();
-        if (isCareLogSize) {
-            needZip = logFile.length() != 0 && logFile.length() >= mLP.mZipLogBytes;
-        }
-        if (needZip) {
-            try {
-                zipFile(logFile, genZipFileName(logFile.getName()));
-                isLogZipSuccessful = true;
-            } catch (Exception e) {
-                logInside(TAG, ExceptionUtils.getStackTrace(e));
-            }
-        }
-        return isLogZipSuccessful;
-    }
-
-    protected void zipFile(File srcLogFile, String destZipName) throws Exception {
-        ZipUtils.zipFile(srcLogFile, new File(mLP.mZipLogDir, destZipName));
-    }
-
-    protected void zipDir(String dir, String destZipName) throws Exception {
-        ZipUtils.zipFolder(dir, mLP.mZipLogDir + File.separator + destZipName + ".zip");
-    }
-
-    protected String genLogFileName(String prefix) {
-        return prefix + mLP.mLogFileNameSimpleDateFormat.format(new Date());
-    }
-
-    protected String genZipFileName(String prefix) {
-        return prefix + LoggerParameters.ZIP_FILE_RULE + mLP.mLogFileNameSimpleDateFormat.format(new Date());
-    }
-
-    protected void deleteLogFileIfOutOfLimited() {
-        File logFile = getLogFile();
-        if (logFile.length() >= mLP.mZipLogBytes) {
-            boolean isDeleteFileSuccessful = FileUtils.deleteFile(logFile);
-            logInside(TAG, "deleteLogFileIfOutOfLimited -> isDeleteFileSuccessful : " + isDeleteFileSuccessful);
-        }
-    }
-
-    protected File[] getZips() {
-        return new File(mLP.mZipLogDir).listFiles();
-    }
-
-    protected void deleteOldestZipIfOutOfLimited() {
-        File[] files = getZips();
-        if (files == null || files.length == 0) {
-            logInside(TAG, "deleteOldestZipIfOutOfLimited -> Files are empty. directory path : " + mLP.mZipLogDir);
-            return;
-        }
-        List<File> fileList = new ArrayList<>(files.length);
-        //Filter my zip files.
-        for (File f : files) {
-            if (f == null || !f.isFile()) {
-                continue;
-            }
-            if (isMyZip(f)) {
-                fileList.add(f);
-            }
-        }
-
-        for (File oldestMultipleZip; (oldestMultipleZip = findOlderMultipleZip(fileList)) != null; ) {
-            boolean isDeleted = FileUtils.deleteFile(oldestMultipleZip);
-            logInside(TAG, "deleteOldestZipIfOutOfLimited ->  delete multiple zip. file name : " + oldestMultipleZip.getName() + ", is deleted : " + isDeleted);
-        }
-
-        while (fileList.size() != 0 && fileList.size() > mLP.mMaxZips) {
-            File oldestZip = findMyOldestZip(fileList);
-            if (oldestZip == null) {
-                logE(TAG, "deleteOldestZipIfOutOfLimited -> cannot find the oldest zip! files : " + getAllOfPath(fileList));
-                break;
-            }
-            FileUtils.deleteFile(oldestZip);
-            fileList.remove(oldestZip);
-        }
-
-    }
-
-    private String getAllOfPath(List<File> fileList) {
-        if (fileList != null && fileList.size() > 0) {
-            StringBuilder sb = new StringBuilder(fileList.size() * 32);
-            final String SEPARATOR = "@:@";
-            for (File f : fileList) {
-                if (f == null) {
-                    sb.append(f);
-                } else {
-                    sb.append(f.getAbsolutePath());
-                }
-                sb.append(SEPARATOR);
-            }
-            sb.setLength(sb.length() - SEPARATOR.length());
-            return sb.toString();
-        }
-        return null;
-    }
-
-    private File findOlderMultipleZip(List<File> fileList) {
-        if (fileList == null || fileList.size() == 0) {
-            return null;
-        }
-        for (int i = 0; i < fileList.size() - 1; i++) {
-            File zipFile = fileList.get(i);
-            String zipPrefix = getZipFilePrefix(zipFile);
-            if (TextUtils.isEmpty(zipPrefix)) {
-                //Exception situation.
-                logI(TAG, "findOlderMultipleZip -> Excepted zip file. zip file : " + fileList.get(i));
-                continue;
-            }
-            for (int j = i + 1; j < fileList.size(); j++) {
-                File anotherZipFile = fileList.get(j);
-                String anotherZipPrefix = getZipFilePrefix(anotherZipFile);
-                if (zipPrefix.equals(anotherZipPrefix)) {
-                    List<File> multipleZipList = new ArrayList<>();
-                    multipleZipList.add(zipFile);
-                    multipleZipList.add(anotherZipFile);
-                    logI(TAG, "findOlderMultipleZip -> found the same prefix files. zipPrefix : " + zipPrefix + ", anotherZipFile : " + anotherZipFile);
-                    return findMyOldestZip(multipleZipList);
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private String getZipFilePrefix(File zipFile) {
-        if (zipFile != null && zipFile.isFile()) {
-            String[] prefixAndSuffix = zipFile.getName().split(LoggerParameters.ZIP_FILE_RULE);
-            if (prefixAndSuffix != null && prefixAndSuffix.length == 2) {
-                return prefixAndSuffix[0];
-            }
-        }
-        return null;
-    }
-
-    private File findMyOldestZip(List<File> fileList) {
-        if (fileList == null || fileList.size() == 0) {
-            return null;
-        }
-        File oldestZip = null;
-        for (int i = 0; i < fileList.size(); i++) {
-            if ((oldestZip = fileList.get(i)) != null) {
-                break;
-            }
-        }
-        if (oldestZip != null) {
-            for (int i = 0; i < fileList.size(); i++) {
-                File tempFile = fileList.get(i);
-                if (tempFile == null) {
-                    continue;
-                }
-                String oldestZipName = oldestZip.getName();
-                String tempZipName = tempFile.getName();
-                if (oldestZipName.compareTo(tempZipName) > 0) {
-                    //Save the oldest zip file.
-                    oldestZip = tempFile;
-                }
-            }
-        }
-        return oldestZip;
-    }
-
-    protected boolean isMyZip(File f) {
-        boolean isMyZip = false;
-        if (f != null) {
-            String fileName = f.getName();
-            isMyZip = !TextUtils.isEmpty(fileName) && fileName.contains(LoggerParameters.ZIP_FILE_RULE);
-        }
-        return isMyZip;
     }
 
     @Override
@@ -298,16 +119,6 @@ public class LoggerImpl implements Logger {
             mLP.mLogHandlerThread.quit();
             mLP.mLogHandlerThread = null;
         }
-    }
-
-    /**
-     * For modify logging permission dynamically.
-     * It's just like a secret door.
-     *
-     * @return
-     */
-    protected boolean isOpenLoggingForce() {
-        return false;
     }
 
     @Override
@@ -337,14 +148,14 @@ public class LoggerImpl implements Logger {
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(new FileOutputStream(logFile, true));
-            if (mLP.mIsRecordRefreshLogStartTag) {
+            if (!TextUtils.isEmpty(mLP.mRefreshLogStartTag)) {
                 printWriter.println(mLP.mRefreshLogStartTag);
             }
-            String log = null;
+            String log;
             while ((log = mLP.mMsgQueue.pollFirst()) != null) {
                 printWriter.println(log);
             }
-            if (mLP.mIsRecordRefreshLogEndTag) {
+            if (!TextUtils.isEmpty(mLP.mRefreshLogEndTag)) {
                 printWriter.println(mLP.mRefreshLogEndTag);
             }
         } catch (Exception e) {
@@ -360,34 +171,54 @@ public class LoggerImpl implements Logger {
     private File getLogFile() {
         File logDir = new File(mLP.mLogDir);
         FileUtils.checkDir(logDir);
-        final String fLogFileName = mLP.mLogFileName;
-
-        File[] mLogFiles = logDir.listFiles(new FilenameFilter() {
+        File[] logFileArr = logDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                boolean isMyLog = !TextUtils.isEmpty(name) && name.startsWith(fLogFileName);
-                //logInside(TAG, "getLogFile - accept name : " + name + ", logFileName : " + fLogFileName + ", isMyLog : " + isMyLog);
-                return isMyLog;
+                return name.matches(mLP.mLogFileNamePrefix + "\\d+") && new File(dir, name).isFile();
             }
         });
-
-        File myLogFile = null;
-        if (mLogFiles != null && mLogFiles.length > 0) {
-            for (File logFile : mLogFiles) {
-                if (logFile != null && logFile.isFile()) {
-                    myLogFile = logFile;
-                    //logInside(TAG, "getLogFile -> Get the old log file.My old log file name ：" + myLogFile.getName());
-                    break;
+        File logFile = null;
+        if (logFileArr == null || logFileArr.length == 0) {
+            logFile = new File(logDir, mLP.mLogFileNamePrefix + 1);
+            logInside(TAG, "getLogFile -> There is no older log file. So create a new one; New log's file name ：" + logFile.getName());
+        } else if (logFileArr.length > mLP.mLogFileMax) {
+            for (int i = 0, size = logFileArr.length; size > mLP.mLogFileMax; i++) {
+                File tempFile = logFileArr[i];
+                if (tempFile != null && tempFile.delete()) {
+                    logInside(TAG, "getLogFile delete -> fileName=" + tempFile.getName());
+                    logFileArr[i] = null;
+                }
+                size--;
+            }
+            for (int i = 0, fileNumber = 0; i < logFileArr.length; i++) {
+                File tempFile = logFileArr[i];
+                if (tempFile != null) {
+                    String newFileName = mLP.mLogFileNamePrefix + (++fileNumber);
+                    logInside(TAG, "getLogFile rename from " + tempFile.getName() + " to " + newFileName);
+                    tempFile.renameTo(new File(tempFile.getParent(), newFileName));
                 }
             }
         }
 
-        //If myLogFile is still null, It mean's that it's first time to get the myLogFile.
-        if (myLogFile == null) {
-            myLogFile = new File(logDir, genLogFileName(fLogFileName));
-            logInside(TAG, "getLogFile -> There is no older log file. So create a new one; New log's file name ：" + myLogFile.getName());
+        if (logFile == null) {
+            int fileNumber = 1;
+            for (int i = 0; i < logFileArr.length; i++) {
+                File tempFile = logFileArr[i];
+                if (tempFile == null || !tempFile.isFile()) {
+                    continue;
+                }
+                if (tempFile.length() < mLP.mLogFileBytesThreshold) {
+                    logFile = tempFile;
+                    break;
+                }
+                fileNumber++;
+            }
+            if (logFile == null) {
+                logFile = new File(mLP.mLogDir, mLP.mLogFileNamePrefix + fileNumber);
+            }
         }
-        return myLogFile;
+
+        return logFile;
     }
 
     protected void logInside(String tag, String msg) {
@@ -401,7 +232,7 @@ public class LoggerImpl implements Logger {
 
     @Override
     public void logT(String tag, String msg) {
-        if (mLP.mIsDebug || isOpenLoggingForce()) {
+        if (mLP.mIsDebug) {
             log(INFO_MARK_TEMP, tag, msg, false);
         }
     }
@@ -422,10 +253,9 @@ public class LoggerImpl implements Logger {
         if (TextUtils.isEmpty(infoMark) || TextUtils.isEmpty(tag) || TextUtils.isEmpty(msg)) {
             return;
         }
-        if (mLP.mIsDebug || isOpenLoggingForce()) {
+        if (mLP.mIsDebug) {
             switch (infoMark) {
                 case INFO_MARK_ERROR:
-                case INFO_MARK_EXCEPTION:
                     Log.e(tag, msg);
                     break;
 
@@ -444,75 +274,45 @@ public class LoggerImpl implements Logger {
 
     public static class Builder {
 
-        private Context mContext;
-        private Looper mLooper;
-
-        SimpleDateFormat mLogFileNameSimpleDateFormat;
         SimpleDateFormat mLogContentSimpleDateFormat;
 
-        private boolean mIsOpenInsideLog = true;
+        private Looper mLooper;
+
         private boolean mIsDebug;
-        private boolean mIsRecordRefreshLogStartTag;
-        private boolean mIsRecordRefreshLogEndTag;
 
         private String mHeaderInfo;
         private String mRefreshLogStartTag = "@refresh log start@";
         private String mRefreshLogEndTag = "@refresh log end@";
         private String mLogDir;
-        private String mLogFileName;
-        private String mZipLogDir;
+        private String mLogFileNamePrefix;
 
-        private int mLogRefreshBytes = 1024 * 2;//Default value is 2 KB.
-        private int mZipLogBytes = 1024 * 1024 * 8; //Default value is 8 MB.
-        private int mMaxZips = 2;
+        private int mLogFileMax = 3;
+        private int mLogFileBytesThreshold;
+        private int mLogInQueueBytesThreshold = 1024 * 2;//Default value is 2 KB.
 
-        public Logger build() {
+        public LoggerImpl build() {
             checkParams();
-            LoggerImpl localLogger = generateLogger();
+            LoggerImpl localLogger = new LoggerImpl();
             apply(localLogger.mLP);
             return localLogger;
         }
 
-        /**
-         * Lets the subclass can reuse parent's code.
-         *
-         * @return LoggerImpl object or LoggerImpl's children.
-         */
-        protected LoggerImpl generateLogger() {
-            return new LoggerImpl();
-        }
-
         protected void checkParams() {
-            if (mContext == null) {
-                throw new NullPointerException("The context object can not be null!");
-            }
-            if (TextUtils.isEmpty(mLogDir)) {
-                throw new IllegalArgumentException("The log directory path cannot be empty.");
-            } else if (!FileUtils.checkDir(new File(mLogDir))) {
+            if (!FileUtils.checkDir(new File(mLogDir))) {
                 throw new IllegalArgumentException("The log directory cannot be create. log dir : " + mLogDir);
             }
-            if (TextUtils.isEmpty(mLogFileName)) {
+            if (TextUtils.isEmpty(mLogFileNamePrefix)) {
                 throw new IllegalArgumentException("The log file name cannot be empty!");
             }
-            if (TextUtils.isEmpty(mZipLogDir)) {
-                throw new IllegalArgumentException("The zip directory path cannot be empty.");
-            } else if (!FileUtils.checkDir(new File(mZipLogDir))) {
-                throw new IllegalArgumentException("The zip directory cannot be create. zip dir : " + mZipLogDir);
+            if (mLogFileMax < 1) {
+                throw new IllegalArgumentException("mLogFileMax shouldn't smaller than 1.");
+            }
+            if (mLogFileBytesThreshold < 1024) {
+                throw new IllegalArgumentException("mLogFileBytesThreshold shouldn't smaller than 1KB.");
             }
         }
 
         protected void apply(LoggerParameters lp) {
-            lp.mContext = mContext;
-
-            if (mLogFileNameSimpleDateFormat == null) {
-                SimpleDateFormat sdf = new SimpleDateFormat();
-                sdf.applyPattern("yyyy-MM-dd_HH-mm-ss-sss");
-                sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
-                lp.mLogFileNameSimpleDateFormat = sdf;
-            } else {
-                lp.mLogFileNameSimpleDateFormat = mLogFileNameSimpleDateFormat;
-            }
-
             if (mLogContentSimpleDateFormat == null) {
                 SimpleDateFormat sdf = new SimpleDateFormat();
                 sdf.applyPattern("yyyy-MM-dd HH:mm:ss.sss");
@@ -522,49 +322,25 @@ public class LoggerImpl implements Logger {
                 lp.mLogContentSimpleDateFormat = mLogContentSimpleDateFormat;
             }
 
-            //lp.mMsgQueue = new MyLinkedList<>();
-            lp.mMsgQueue = new LinkedList<>();
             lp.mLooper = mLooper;
-            lp.mIsOpenInsideLog = mIsOpenInsideLog;
+            lp.mLogDir = mLogDir;
+            lp.mLogFileNamePrefix = mLogFileNamePrefix;
+            lp.mMsgQueue = new LinkedList<>();
+            lp.mLogInQueueBytesThreshold = mLogInQueueBytesThreshold;
             lp.mIsDebug = mIsDebug;
-            lp.mIsRecordRefreshLogStartTag = mIsRecordRefreshLogStartTag;
-            lp.mIsRecordRefreshLogEndTag = mIsRecordRefreshLogEndTag;
             lp.mHeaderInfo = mHeaderInfo;
             lp.mRefreshLogStartTag = mRefreshLogStartTag;
             lp.mRefreshLogEndTag = mRefreshLogEndTag;
-            lp.mLogDir = mLogDir;
-            lp.mLogFileName = mLogFileName;
-            lp.mZipLogDir = mZipLogDir;
-            lp.mZipLogBytes = mZipLogBytes;
-            lp.mLogRefreshBytes = mLogRefreshBytes;
-            lp.mMaxZips = mMaxZips;
-        }
-
-        public void setLogFileNameSimpleDateFormat(SimpleDateFormat logFileNameSimpleDateFormat) {
-            mLogFileNameSimpleDateFormat = logFileNameSimpleDateFormat;
+            lp.mLogFileMax = mLogFileMax;
+            lp.mLogFileBytesThreshold = mLogFileBytesThreshold;
         }
 
         public void setLogContentSimpleDateFormat(SimpleDateFormat logContentSimpleDateFormat) {
             mLogContentSimpleDateFormat = logContentSimpleDateFormat;
         }
 
-        public Builder setOpenInsideLog(boolean openInsideLog) {
-            mIsOpenInsideLog = openInsideLog;
-            return this;
-        }
-
         public Builder setIsDebug(boolean isDebug) {
             mIsDebug = isDebug;
-            return this;
-        }
-
-        public Builder setIsRecordRefreshLogStartTag(boolean recordRefreshLogStartTag) {
-            mIsRecordRefreshLogStartTag = recordRefreshLogStartTag;
-            return this;
-        }
-
-        public Builder setIsRecordRefreshLogEndTag(boolean recordRefreshLogEndTag) {
-            mIsRecordRefreshLogEndTag = recordRefreshLogEndTag;
             return this;
         }
 
@@ -588,28 +364,13 @@ public class LoggerImpl implements Logger {
             return this;
         }
 
-        public Builder setLogFileName(String logFileName) {
-            mLogFileName = logFileName;
+        public Builder setLogFileNamePrefix(String logFileNamePrefix) {
+            mLogFileNamePrefix = logFileNamePrefix;
             return this;
         }
 
-        public Builder setZipLogDir(String zipLogDir) {
-            mZipLogDir = zipLogDir;
-            return this;
-        }
-
-        public Builder setLogRefreshBytes(int logRefreshBytes) {
-            mLogRefreshBytes = logRefreshBytes;
-            return this;
-        }
-
-        public Builder setZipLogBytes(int zipLogBytes) {
-            mZipLogBytes = zipLogBytes;
-            return this;
-        }
-
-        public Builder setMaxZips(int maxZips) {
-            mMaxZips = maxZips;
+        public Builder setLogInQueueBytesThreshold(int logInQueueBytesThreshold) {
+            mLogInQueueBytesThreshold = logInQueueBytesThreshold;
             return this;
         }
 
@@ -618,11 +379,15 @@ public class LoggerImpl implements Logger {
             return this;
         }
 
-        public Builder setContext(Context c) {
-            mContext = c;
+        public Builder setLogFileBytesThreshold(int logFileBytesThreshold) {
+            mLogFileBytesThreshold = logFileBytesThreshold;
             return this;
         }
 
+        public Builder setLogFileMax(int logFileMax) {
+            mLogFileMax = logFileMax;
+            return this;
+        }
     }
 
 }

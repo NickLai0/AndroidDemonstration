@@ -17,9 +17,6 @@ import java.util.LinkedList;
  */
 public class LoggerParameters extends BaseParameters {
 
-    static final String ZIP_FILE_RULE = "_zip_";
-
-    SimpleDateFormat mLogFileNameSimpleDateFormat;
     SimpleDateFormat mLogContentSimpleDateFormat;
 
     LinkedList<String> mMsgQueue;
@@ -28,87 +25,15 @@ public class LoggerParameters extends BaseParameters {
 
     Handler mLogHandler;
 
-    boolean mIsOpenInsideLog;
-    boolean mIsRecordRefreshLogStartTag;
-    boolean mIsRecordRefreshLogEndTag;
-
     String mHeaderInfo;
     String mRefreshLogStartTag;
     String mRefreshLogEndTag;
     String mLogDir;
-    String mLogFileName;
-    String mZipLogDir;
+    String mLogFileNamePrefix;
 
-    int mLogRefreshBytes;
-    int mLogInQueueBytes;
-    int mZipLogBytes;
-    int mMaxZips;
+    int mLogInQueueBytesThreshold;
+    int mLogInQueueCurrentBytes;
+    int mLogFileMax;
+    int mLogFileBytesThreshold;
 
-    public SimpleDateFormat getLogFileNameSimpleDateFormat() {
-        return mLogFileNameSimpleDateFormat;
-    }
-
-    public SimpleDateFormat getLogContentSimpleDateFormat() {
-        return mLogContentSimpleDateFormat;
-    }
-
-    public LinkedList<String> getMsgQueue() {
-        return mMsgQueue;
-    }
-
-    public HandlerThread getLogHandlerThread() {
-        return mLogHandlerThread;
-    }
-
-    public Handler getLogHandler() {
-        return mLogHandler;
-    }
-
-    public boolean isOpenInsideLog() {
-        return mIsOpenInsideLog;
-    }
-
-    public boolean isRecordRefreshLogStartTag() {
-        return mIsRecordRefreshLogStartTag;
-    }
-
-    public boolean isRecordRefreshLogEndTag() {
-        return mIsRecordRefreshLogEndTag;
-    }
-
-    public String getHeaderInfo() {
-        return mHeaderInfo;
-    }
-
-    public String getRefreshLogStartTag() {
-        return mRefreshLogStartTag;
-    }
-
-    public String getRefreshLogEndTag() {
-        return mRefreshLogEndTag;
-    }
-
-    public String getLogDir() {
-        return mLogDir;
-    }
-
-    public String getLogFileName() {
-        return mLogFileName;
-    }
-
-    public String getZipLogDir() {
-        return mZipLogDir;
-    }
-
-    public int getLogRefreshBytes() {
-        return mLogRefreshBytes;
-    }
-
-    public int getZipLogBytes() {
-        return mZipLogBytes;
-    }
-
-    public int getMaxZips() {
-        return mMaxZips;
-    }
 }

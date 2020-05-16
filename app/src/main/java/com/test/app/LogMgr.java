@@ -7,7 +7,6 @@ import android.os.Looper;
 import com.log.BuildConfig;
 import com.log.LoggerImpl;
 import com.log.interfaces.Logger;
-import com.log.interfaces.Uploader;
 import com.log.listener.OnLogRefreshListener;
 import com.test.util.ExceptionUtil;
 
@@ -22,7 +21,7 @@ import java.io.File;
  * </p >
  * ******************(^_^)***********************
  */
-public class LogMgr {
+public final class LogMgr {
 
     private static final String TAG = LogMgr.class.getSimpleName();
 
@@ -30,11 +29,12 @@ public class LogMgr {
 
     private Logger mLogger;
 
-    private Uploader mUploader;
-
     private Context mContext;
 
     private Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;
+    private String mLogZipDir;
+    private String mLogDir;
+    private String mLogFileName;
 
     public static LogMgr i() {
         return SingletonHolder.sfLogMgr;
@@ -47,43 +47,28 @@ public class LogMgr {
     private LogMgr() {
     }
 
-    void init(Context c, Looper loggingLooper) {
-        if (mContext != null) {
-            //Has already initialized.
-            return;
-        }
+    void init(Context c) {
         mContext = c.getApplicationContext();
-        if (loggingLooper == null) {
-            mHandlerThread = new HandlerThread(TAG);
-            mHandlerThread.start();
-            loggingLooper = mHandlerThread.getLooper();
-        }
+        mHandlerThread = new HandlerThread(TAG);
+        mHandlerThread.start();
+        Looper looper = mHandlerThread.getLooper();
+        mLogDir = mContext.getFilesDir() + File.separator + "logs";
+        mLogFileName = "log";
+        mLogZipDir = mLogDir + File.separator + "zip";
         boolean isDebug = BuildConfig.DEBUG;
-        String logDir = mContext.getFilesDir() + File.separator + "logRepo";
-        String logZipDir = logDir + File.separator + "zip";
-        String logFileName = "log";
 
         mLogger = new LoggerImpl.Builder()
-                .setContext(mContext)
-                .setLooper(loggingLooper)
-                .setLogDir(logDir)
-                .setLogFileName(logFileName)
-                .setZipLogDir(logZipDir)
-                .setLogRefreshBytes(1024)
-                .setZipLogBytes(1024 * 1024 * 5)
-                .setMaxZips(3)
+                .setLooper(looper)
+                .setLogDir(mLogDir)
+                .setLogFileNamePrefix(mLogFileName)
+                .setLogFileMax(3)
+                .setLogFileBytesThreshold(1024 * 1024 * 5)
+                .setLogInQueueBytesThreshold(1024)
                 .setIsDebug(isDebug)
-                .setOpenInsideLog(isDebug)
-                .setIsRecordRefreshLogStartTag(isDebug)
-                .setIsRecordRefreshLogEndTag(isDebug)
-//                .setHeaderInfo()
-//                .setRefreshLogStartTag()
-//                .setRefreshLogEndTag()
+                //.setHeaderInfo()
+                .setRefreshLogStartTag(isDebug ? "@refresh log start@" : null)
+                .setRefreshLogEndTag(null)
                 .build();
-
-        //start logger.
-        mLogger.start();
-        logI(TAG, "init -> start logger.");
 
         mDefaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
 
@@ -108,25 +93,12 @@ public class LogMgr {
 
     void start() {
         mLogger.start();
-        logI(TAG, "start -> Logs must logging after this method be called");
     }
 
     void stop() {
         logI(TAG, "stop -> this should never be called.");
         mLogger.stop();
-        if (mHandlerThread != null) {
-            mHandlerThread.quit();
-        }
-    }
-
-    private long logStartMillis;
-
-    public void logStart() {
-        logStartMillis = System.currentTimeMillis();
-    }
-
-    public void logEnd(String tag, String msg) {
-        logI(TAG, "spent time : " + (System.currentTimeMillis() - logStartMillis) + " ; " + msg);
+        mHandlerThread.quit();
     }
 
     public void logT(String tag, String msg) {
@@ -149,4 +121,6 @@ public class LogMgr {
             }
         });
     }
+
+
 }
