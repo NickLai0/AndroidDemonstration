@@ -53,6 +53,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        lifeCycleLog("onResume");
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         lifeCycleLog("onPause");

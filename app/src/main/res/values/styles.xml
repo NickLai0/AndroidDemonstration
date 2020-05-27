@@ -13,8 +13,8 @@
         <!-- Customize your theme here. -->
         <item name="android:windowFullscreen">true</item>
         <!--Open this if you want your UI fill device!-->
-<!--        <item name="android:windowTranslucentStatus">true</item>-->
-<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
         <item name="android:windowBackground">@color/white</item>
         <item name="android:screenOrientation">portrait</item>
     </style>
@@ -65,7 +65,21 @@
 
     <style name="Custom.ProgressBar.Horizontal" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_custom</item>
-        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_custom</item>
+        <item name="android:indeterminateDrawable">
+            @drawable/progress_indeterminate_horizontal_custom
+        </item>
+    </style>
+
+    <style name="Widget.AppCompat.ProgressBar.Holo">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_medium_white</item>
+        <item name="android:indeterminateBehavior">repeat</item>
+        <item name="android:indeterminateDuration">3500</item>
+        <item name="android:minWidth">48dip</item>
+        <item name="android:maxWidth">48dip</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:maxHeight">48dip</item>
+        <item name="android:mirrorForRtl">false</item>
     </style>
 
 </resources>
