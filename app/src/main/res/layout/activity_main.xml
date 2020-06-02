@@ -176,10 +176,15 @@
                 android:text="mvp demo." />
 
             <TextView
-                android:onClick="openActivityWithoutAnimation"
                 android:id="@+id/am_open_activity_without_animation"
                 style="@style/LongOrangeTVStyle"
+                android:onClick="openActivityWithoutAnimation"
                 android:text="open activity without animation" />
+
+            <TextView
+                style="@style/LongOrangeTVStyle"
+                android:onClick="testStatFs"
+                android:text="test file system" />
 
         </LinearLayout>
 

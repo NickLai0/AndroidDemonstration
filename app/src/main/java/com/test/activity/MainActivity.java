@@ -249,6 +249,10 @@ public class MainActivity extends BaseActivity {
         WithoutAnimationAActivity.start(this);
     }
 
+    public void testStatFs(View v) {
+        TestStatFsActivity.start(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

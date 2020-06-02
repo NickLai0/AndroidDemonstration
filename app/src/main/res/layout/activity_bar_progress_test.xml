@@ -49,6 +49,35 @@
         <TextView
             style="@style/WrapContent"
             android:layout_marginTop="20dp"
+            android:text="style 为 @style/Widget.AppCompat.ProgressBar.Holo" />
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Holo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minWidth="12dp"
+            android:minHeight="12dp" />
+
+        <TextView
+            style="@style/WrapContent"
+            android:layout_marginTop="20dp"
+            android:text="style 为 @style/Widget.AppCompat.ProgressBar.Holo" />
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.ProgressBar.Holo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minWidth="12dp"
+            android:minHeight="12dp"
+            android:maxWidth="12dp"
+            android:maxHeight="12dp"
+            />
+
+        <TextView
+            style="@style/WrapContent"
+            android:layout_marginTop="20dp"
             android:text="style 为 @style/Widget.AppCompat.ProgressBar 并且 indeterminateOnly 为false" />
 
         <ProgressBar

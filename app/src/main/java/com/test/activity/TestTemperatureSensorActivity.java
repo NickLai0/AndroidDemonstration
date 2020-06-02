@@ -67,8 +67,8 @@ public class TestTemperatureSensorActivity extends BaseActivity implements Senso
 
     @Override
     protected void initView() {
-        mTvTemperatureInfo = (TextView)findViewById(R.id.ttsa_tv_temperature_info);
-        mTvTemperatureInfoReadFileWay = (TextView)findViewById(R.id.ttsa_tv_temperature_info_read_file_way);
+        mTvTemperatureInfo = (TextView) findViewById(R.id.ttsa_tv_temperature_info);
+        mTvTemperatureInfoReadFileWay = (TextView) findViewById(R.id.ttsa_tv_temperature_info_read_file_way);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class TestTemperatureSensorActivity extends BaseActivity implements Senso
                 Log.i(TAG, info);
                 Log.i(TAG, "-----------------------------------------");
                 mTvTemperatureInfoReadFileWay.setText(info);
-                mHandler.postDelayed(this, 0);
+                mHandler.postDelayed(this, 500);
             }
         }, 0);
 
@@ -230,7 +230,6 @@ public class TestTemperatureSensorActivity extends BaseActivity implements Senso
         genStringAndShowToLast(map);
     }
 
-
     private void genStringAndShowToLast(Map<String, String> map) {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             mStringBuilder.append(entry.getKey()).append('=').append(entry.getValue()).append('\n');
@@ -238,7 +237,6 @@ public class TestTemperatureSensorActivity extends BaseActivity implements Senso
         mStringBuilder.append("\n\n");
         mTvTemperatureInfo.setText(mStringBuilder.toString());
     }
-
 
     private class BatteryInfoReceiver extends BroadcastReceiver {
 
@@ -255,4 +253,11 @@ public class TestTemperatureSensorActivity extends BaseActivity implements Senso
 
     }
 
+    @Override
+    protected void onFinish() {
+        super.onFinish();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+    }
 }
