@@ -48,6 +48,8 @@
         <activity android:name=".activity.TestMvpActivity"></activity>
         <activity android:name=".activity.RecordVideoActivity"></activity>
         <activity android:name=".activity.TestStatFsActivity"></activity>
+        <activity android:name=".activity.RemoveFragmentAfterOnStopActivity"></activity>
+        <activity android:name=".activity.ClickFragmentPassThroughActivity"></activity>
         <activity
             android:name=".activity.WithoutAnimationAActivity"
             android:launchMode="singleTask"></activity>

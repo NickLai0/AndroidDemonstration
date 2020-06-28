@@ -39,8 +39,9 @@ public class LoggerImpl implements Logger {
     private static final String INFO_MARK_INFO = "[info]";
     private static final String INFO_MARK_ERROR = "[error]";
 
-    private final int MSG_REFRESH_LOG_REQUEST = 2;
+    private final int MSG_LOG_REFRESH_REQUEST = 2;
     private final int MSG_LOG_ENQUEUE = 3;
+    private final int MSG_LOG_REFRESH_DEADLINE = 4;
 
     protected LoggerParameters mLP = new LoggerParameters();
 
@@ -83,22 +84,30 @@ public class LoggerImpl implements Logger {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_LOG_ENQUEUE:
-                    if (msg.obj instanceof String) {
-                        String formattedMsg = (String) msg.obj;
-                        mLP.mMsgQueue.addLast(formattedMsg);
-                        mLP.mLogInQueueCurrentBytes += formattedMsg.length();
-                    }
-                    boolean refreshLogImmediately = msg.arg1 != 0;
-                    if (refreshLogImmediately || mLP.mLogInQueueCurrentBytes >= mLP.mLogInQueueBytesThreshold) {
-                        //if (!mLP.mLogHandler.hasMessages(MSG_REFRESH_LOG_REQUEST)) {
+                    String formattedMsg = (String) msg.obj;
+                    mLP.mMsgQueue.addLast(formattedMsg);
+                    mLP.mLogInQueueCurrentBytes += formattedMsg.length();
+                    boolean refreshLogForcefully = msg.arg1 != 0;
+                    boolean refreshLogNormally = mLP.mLogInQueueCurrentBytes >= mLP.mLogInQueueBytesThreshold;
+                    boolean hasToRefreshLog = refreshLogForcefully || refreshLogNormally;
+                    if (hasToRefreshLog) {
                         refreshLogRequest(null);
-                        //}
+                    }
+                    //Remove the previous message.
+                    removeMessages(MSG_LOG_REFRESH_DEADLINE);
+                    if (!hasToRefreshLog) {
+                        sendEmptyMessageDelayed(MSG_LOG_REFRESH_DEADLINE, mLP.mLogRefreshDeadline);
                     }
                     break;
 
-                case MSG_REFRESH_LOG_REQUEST:
+                case MSG_LOG_REFRESH_REQUEST:
                     //msg.obj might be null.
                     refreshLog((OnLogRefreshListener) msg.obj);
+                    mLP.mLogInQueueCurrentBytes = 0;
+                    break;
+
+                case MSG_LOG_REFRESH_DEADLINE:
+                    refreshLog(null);
                     mLP.mLogInQueueCurrentBytes = 0;
                     break;
             }
@@ -126,7 +135,7 @@ public class LoggerImpl implements Logger {
         if (mLP.mLogHandler == null) {
             logInside(TAG, "notifyRefreshLog -> notifyRefreshLog method invoked but the log handler haven't initiated yet!");
         } else {
-            Message.obtain(mLP.mLogHandler, MSG_REFRESH_LOG_REQUEST, l).sendToTarget();
+            Message.obtain(mLP.mLogHandler, MSG_LOG_REFRESH_REQUEST, l).sendToTarget();
         }
     }
 
@@ -243,7 +252,7 @@ public class LoggerImpl implements Logger {
     }
 
     private void log(String infoMark, String tag, String msg, boolean refreshLogImmediately) {
-        logcatLogging(infoMark, tag, msg);
+        //logcatLogging(infoMark, tag, msg);
         String date = mLP.mLogContentSimpleDateFormat.format(new Date());
         String formattedMsg = String.format(Locale.getDefault(), "%s %s %s: %s", date, infoMark, tag, msg);
         Message.obtain(mLP.mLogHandler, MSG_LOG_ENQUEUE, refreshLogImmediately ? 1 : 0, 0, formattedMsg).sendToTarget();
@@ -288,7 +297,11 @@ public class LoggerImpl implements Logger {
 
         private int mLogFileMax = 3;
         private int mLogFileBytesThreshold;
-        private int mLogInQueueBytesThreshold = 1024 * 2;//Default value is 2 KB.
+        //the default value is 2 KB.
+        private int mLogInQueueBytesThreshold = 1024 * 2;
+
+        //the default value is 30 seconds.
+        private long mLogRefreshDeadline = 1000 * 30;
 
         public LoggerImpl build() {
             checkParams();
@@ -305,10 +318,13 @@ public class LoggerImpl implements Logger {
                 throw new IllegalArgumentException("The log file name cannot be empty!");
             }
             if (mLogFileMax < 1) {
-                throw new IllegalArgumentException("mLogFileMax shouldn't smaller than 1.");
+                throw new IllegalArgumentException("mLogFileMax can not smaller than 1.");
             }
             if (mLogFileBytesThreshold < 1024) {
-                throw new IllegalArgumentException("mLogFileBytesThreshold shouldn't smaller than 1KB.");
+                throw new IllegalArgumentException("mLogFileBytesThreshold can not smaller than 1KB.");
+            }
+            if (mLogRefreshDeadline < 1000) {
+                throw new IllegalArgumentException("mLogRefreshDeadline can not smaller than 1000 milliseconds.");
             }
         }
 
@@ -333,6 +349,7 @@ public class LoggerImpl implements Logger {
             lp.mRefreshLogEndTag = mRefreshLogEndTag;
             lp.mLogFileMax = mLogFileMax;
             lp.mLogFileBytesThreshold = mLogFileBytesThreshold;
+            lp.mLogRefreshDeadline = mLogRefreshDeadline;
         }
 
         public void setLogContentSimpleDateFormat(SimpleDateFormat logContentSimpleDateFormat) {
@@ -386,6 +403,11 @@ public class LoggerImpl implements Logger {
 
         public Builder setLogFileMax(int logFileMax) {
             mLogFileMax = logFileMax;
+            return this;
+        }
+
+        public Builder setLogRefreshDeadline(long logRefreshDeadline) {
+            mLogRefreshDeadline = logRefreshDeadline;
             return this;
         }
     }

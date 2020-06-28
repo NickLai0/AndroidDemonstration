@@ -36,4 +36,5 @@ public class LoggerParameters extends BaseParameters {
     int mLogFileMax;
     int mLogFileBytesThreshold;
 
+    public long mLogRefreshDeadline;
 }

@@ -253,6 +253,14 @@ public class MainActivity extends BaseActivity {
         TestStatFsActivity.start(this);
     }
 
+    public void testRemoveFragmentAfterOnStop(View v) {
+        RemoveFragmentAfterOnStopActivity.start(this);
+    }
+
+    public void testClickFragmentPassThrough(View v) {
+        ClickFragmentPassThroughActivity.start(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

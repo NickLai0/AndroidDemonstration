@@ -3,12 +3,14 @@ package com.test.app;
 import android.content.Context;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 
 import com.log.BuildConfig;
 import com.log.LoggerImpl;
 import com.log.interfaces.Logger;
 import com.log.listener.OnLogRefreshListener;
 import com.test.util.ExceptionUtil;
+import com.wav.util.LogUtils;
 
 import java.io.File;
 
@@ -52,11 +54,15 @@ public final class LogMgr {
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
         Looper looper = mHandlerThread.getLooper();
-        mLogDir = mContext.getFilesDir() + File.separator + "logs";
+        mLogDir = mContext.getExternalFilesDir(null) + File.separator + "ddktLogs";
         mLogFileName = "log";
         mLogZipDir = mLogDir + File.separator + "zip";
         boolean isDebug = BuildConfig.DEBUG;
-
+        long refreshLogDeadline = 1000 * 30;
+        if (isDebug) {
+            //Testing situation. get it a short time.
+            refreshLogDeadline = 2000;
+        }
         mLogger = new LoggerImpl.Builder()
                 .setLooper(looper)
                 .setLogDir(mLogDir)
@@ -68,6 +74,7 @@ public final class LogMgr {
                 //.setHeaderInfo()
                 .setRefreshLogStartTag(isDebug ? "@refresh log start@" : null)
                 .setRefreshLogEndTag(null)
+                .setLogRefreshDeadline(refreshLogDeadline)
                 .build();
 
         mDefaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -103,14 +110,17 @@ public final class LogMgr {
 
     public void logT(String tag, String msg) {
         mLogger.logT(tag, msg);
+        Log.i(tag,msg);
     }
 
     public void logI(String tag, String msg) {
         mLogger.logI(tag, msg);
+        Log.i(tag,msg);
     }
 
     public void logE(String tag, String msg) {
         mLogger.logE(tag, msg);
+        Log.i(tag,msg);
     }
 
     public void flushAsync() {

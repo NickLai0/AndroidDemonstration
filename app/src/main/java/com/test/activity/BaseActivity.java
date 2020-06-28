@@ -3,11 +3,13 @@ package com.test.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.test.BuildConfig;
+import com.test.handler.WeakHandler;
 import com.test.util.L;
 
 /**
@@ -19,7 +21,9 @@ import com.test.util.L;
  * </p >
  * ******************(^_^)***********************
  */
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements
+        View.OnClickListener,
+        WeakHandler.IMessageHandler {
 
     protected boolean mLifecycleLogging = BuildConfig.DEBUG;
 
@@ -27,6 +31,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     private static boolean isTest = true;
     private static int testCount = 0;
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        lifeCycleLog("onSaveInstanceState -> ");
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,8 +132,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected  void onFinish() {
+    protected void onFinish() {
         lifeCycleLog("onFinish");
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     protected abstract int provideLayoutId();
@@ -137,11 +151,21 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
     }
 
-
     public void lifeCycleLog(String msg) {
         if (mLifecycleLogging) {
             L.i(TAG, msg);
         }
+    }
+
+    protected WeakHandler mHandler;
+
+    public void initHandler() {
+        mHandler = new WeakHandler();
+        mHandler.setMessageHandler(this);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
     }
 
 }

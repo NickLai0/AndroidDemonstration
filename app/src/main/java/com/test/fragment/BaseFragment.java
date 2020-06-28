@@ -23,7 +23,7 @@ import com.test.BuildConfig;
  */
 public abstract class BaseFragment extends Fragment {
 
-    private final String TAG = getClass().getSimpleName();
+    protected final String TAG = getClass().getSimpleName();
 
     protected boolean mLifecycleLogging = BuildConfig.DEBUG;
 

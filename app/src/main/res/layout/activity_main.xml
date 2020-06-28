@@ -186,6 +186,16 @@
                 android:onClick="testStatFs"
                 android:text="test file system" />
 
+            <TextView
+                style="@style/LongOrangeTVStyle"
+                android:onClick="testRemoveFragmentAfterOnStop"
+                android:text="test remove fragment after onStop" />
+
+            <TextView
+                style="@style/LongOrangeTVStyle"
+                android:onClick="testClickFragmentPassThrough"
+                android:text="test click fragment pass through" />
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
