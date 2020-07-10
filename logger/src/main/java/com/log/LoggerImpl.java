@@ -63,10 +63,10 @@ public class LoggerImpl implements Logger {
             mLP.mLogHandlerThread = new HandlerThread(TAG) {
                 @Override
                 protected void onLooperPrepared() {
-                    logInside(TAG, "start -> onLooperPrepared -> On sub thread looper prepared.");
                     if (mLP.mLogHandler == null) {
                         mLP.mLogHandler = new LogHandler(getLooper());
                     }
+                    logInside(TAG, "start -> onLooperPrepared -> On sub thread looper prepared.");
                 }
             };
             mLP.mLogHandlerThread.start();
@@ -87,15 +87,15 @@ public class LoggerImpl implements Logger {
                     String formattedMsg = (String) msg.obj;
                     mLP.mMsgQueue.addLast(formattedMsg);
                     mLP.mLogInQueueCurrentBytes += formattedMsg.length();
-                    boolean refreshLogForcefully = msg.arg1 != 0;
-                    boolean refreshLogNormally = mLP.mLogInQueueCurrentBytes >= mLP.mLogInQueueBytesThreshold;
-                    boolean hasToRefreshLog = refreshLogForcefully || refreshLogNormally;
-                    if (hasToRefreshLog) {
+                    boolean forceRefreshLog = msg.arg1 != 0;
+                    boolean needRefreshLog = mLP.mLogInQueueCurrentBytes >= mLP.mLogInQueueBytesThreshold;
+                    if (forceRefreshLog || needRefreshLog) {
                         refreshLogRequest(null);
                     }
                     //Remove the previous message.
                     removeMessages(MSG_LOG_REFRESH_DEADLINE);
-                    if (!hasToRefreshLog) {
+                    boolean logRefreshed = forceRefreshLog || needRefreshLog;
+                    if (!logRefreshed) {
                         sendEmptyMessageDelayed(MSG_LOG_REFRESH_DEADLINE, mLP.mLogRefreshDeadline);
                     }
                     break;
